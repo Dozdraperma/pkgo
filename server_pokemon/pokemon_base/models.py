@@ -18,7 +18,7 @@ class Pokemon(models.Model):
         BUG = 'BG', 'Bug'
         ROCK = 'RK', 'Rock'
         GHOST = 'DK', 'Dark'
-        DRAGON = 'DG', 'Dragon',
+        DRAGON = 'DG', 'Dragon'
         STEEL = 'ST', 'Steel'
         FAIRY = 'FA', 'Fairy'
 
