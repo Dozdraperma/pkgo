@@ -33,5 +33,5 @@ class Pokemon(models.Model):
     base_stamina = models.PositiveSmallIntegerField()
     primary_type = models.CharField(choices=Type.choices, default=Type.NORMAL, max_length=100)
     secondary_type = models.CharField(choices=Type.choices, blank=True, max_length=100)
-    evolution = models.OneToOneField('self', on_delete=models.SET_NULL, null=True)
+    infancy = models.OneToOneField('self', on_delete=models.SET_NULL, null=True)
 

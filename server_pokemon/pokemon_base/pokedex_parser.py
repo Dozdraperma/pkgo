@@ -1,25 +1,10 @@
 import json
 import re
-from dataclasses import dataclass
-from pprint import pprint
-from typing import Dict, Generator
+from pathlib import Path
+from typing import Dict, Set
 
-from django.conf import settings
-
-from pokemon_base.exceptions import ParserError
+from pokemon_base.exceptions import ParserError, ValidationError
 from pokemon_base.models import Pokemon
-
-
-@dataclass
-class ParserResult:
-    pokemon: Dict
-
-    def calculate_unresolved(self) -> Generator:
-        return (
-            field
-            for field in get_pokemon_fields()
-            if field not in self.pokemon.keys()
-        )
 
 
 def convert_to_snake_case(item: str) -> str:
@@ -38,7 +23,7 @@ def convert_to_camel_case(item: str) -> str:
 
 def get_pokemon_fields():
     return [
-        field.name
+        field
         for field in Pokemon._meta.get_fields()
         if field.name != 'pokemon'
     ]
@@ -58,16 +43,32 @@ def get_types(raw_pok: Dict) -> Dict:
     }
 
 
-def parse_pokemon(raw_pok: Dict):
+def get_infancy(raw_pok: Dict) -> str:
+    past_branch = raw_pok['evolution'].get('pastBranch')
+    if past_branch:
+        return past_branch['name']
+
+
+def validate_pokemon(pok: Dict) -> Set[Exception]:
+    errors = set()
+    required = {field.name for field in get_pokemon_fields() if not field.null and not field.blank}
+
+    if unresolved := [field for field, value in pok.items() if value is None and field in required]:
+        errors.add(ParserError(f'Unresolved field(s) in result: {", ".join(unresolved)}'))
+
+    return errors
+
+
+def parse_pokemon(raw_pok: Dict) -> Dict:
     """
     Pokemon parser from json by rules below
-    :param pokemon:
+    :param raw_pok:
     :return:
     """
 
     # Get values from first level of raw source
     result = {
-        field: raw_pok.get(convert_to_camel_case(field))
+        field.name: raw_pok.get(convert_to_camel_case(field.name))
         for field in get_pokemon_fields()
     }
 
@@ -78,18 +79,23 @@ def parse_pokemon(raw_pok: Dict):
     result['family_name'] = raw_pok['family']['name']
     result |= get_types(raw_pok)
 
-    # Reassign evolution field
-    result['evolution'] = [evolution['name'] for evolution in raw_pok['evolution']['futureBranches']]
+    # Reassign fields
+    result['infancy'] = get_infancy(raw_pok)
+    result['id'] = raw_pok['dex']
+
+    # Metrics enhancements
+    result['height'] = int(result['height'] * 100)
+    result['weight'] = int(result['weight'] * 100)
+
+    # Validation
+    if errors := validate_pokemon(result):
+        raise ValidationError(f'Validate failed due to error(s): {", ".join({str(error) for error in errors})}')
 
     return result
 
 
-def pokedex_parser():
-    pokedex_path = settings.BASE_DIR / 'pokedex.json'
-
-    with open(pokedex_path, 'r') as pokedex:
+def pokedex_parser(datapath: Path) -> Pokemon:
+    with open(datapath, 'r') as pokedex:
         pokedex = json.loads(pokedex.read())
-    result = parse_pokemon(pokedex[0])
-    if unresolved := [field for field, value in result.items() if value is None]:
-        raise ParserError(f'Unresolved field(s) in result - {", ".join(unresolved)}')
-    pprint(result)
+
+    raw_pokemons = [parse_pokemon(pokemon) for pokemon in pokedex]
