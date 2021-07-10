@@ -26,7 +26,7 @@ class Pokemon(models.Model):
     name = models.CharField(max_length=100)
     height = models.SmallIntegerField(editable=True)
     weight = models.SmallIntegerField(editable=True)
-    maxCP = models.PositiveSmallIntegerField()
+    max_cp = models.PositiveSmallIntegerField()
     family_name = models.CharField(max_length=100)
     base_attack = models.PositiveSmallIntegerField()
     base_defense = models.PositiveSmallIntegerField()
@@ -34,3 +34,4 @@ class Pokemon(models.Model):
     primary_type = models.CharField(choices=Type.choices, default=Type.NORMAL, max_length=100)
     secondary_type = models.CharField(choices=Type.choices, blank=True, max_length=100)
     evolution = models.OneToOneField('self', on_delete=models.SET_NULL, null=True)
+
