@@ -22,6 +22,15 @@ class Pokemon(models.Model):
         STEEL = 'ST', 'Steel'
         FAIRY = 'FA', 'Fairy'
 
+    class Stage(models.IntegerChoices):
+        UNEVOLVED = 0
+        FIRST = 1
+        SECOND = 2
+
+    class InfancyGender(models.TextChoices):
+        MALE = 'ML', 'Male'
+        FEMALE = 'FL', 'Female'
+
     id = models.PositiveSmallIntegerField(primary_key=True)
     name = models.CharField(max_length=100)
     height = models.SmallIntegerField(editable=True)
@@ -34,4 +43,6 @@ class Pokemon(models.Model):
     primary_type = models.CharField(choices=Type.choices, default=Type.NORMAL, max_length=100)
     secondary_type = models.CharField(choices=Type.choices, blank=True, max_length=100)
     infancy = models.OneToOneField('self', on_delete=models.SET_NULL, null=True)
+    stage = models.PositiveSmallIntegerField(Stage.choices, default=Stage.UNEVOLVED)
+    infancy_gender = models.CharField(choices=InfancyGender.choices, blank=True, max_length=50)
 
