@@ -1,8 +1,7 @@
 from django.db import models
 
 
-class Pokemon(models.Model):
-
+class AbstractPokemon(models.Model):
     class Type(models.TextChoices):
         NORMAL = 'NR', 'Normal'
         FIRE = 'FR', 'Fire'
@@ -31,6 +30,9 @@ class Pokemon(models.Model):
         MALE = 'ML', 'Male'
         FEMALE = 'FL', 'Female'
 
+    class Meta:
+        abstract = True
+
     id = models.PositiveSmallIntegerField(primary_key=True)
     name = models.CharField(max_length=100)
     height = models.SmallIntegerField(editable=True)
@@ -42,7 +44,24 @@ class Pokemon(models.Model):
     base_stamina = models.PositiveSmallIntegerField()
     primary_type = models.CharField(choices=Type.choices, default=Type.NORMAL, max_length=100)
     secondary_type = models.CharField(choices=Type.choices, blank=True, max_length=100)
-    infancy = models.OneToOneField('self', on_delete=models.SET_NULL, null=True)
     stage = models.PositiveSmallIntegerField(Stage.choices, default=Stage.UNEVOLVED)
-    infancy_gender = models.CharField(choices=InfancyGender.choices, blank=True, max_length=50)
+    infancy_gender = models.CharField(choices=InfancyGender.choices, null=True, max_length=50)
+
+
+class Pokemon(AbstractPokemon):
+    regional_variant = models.OneToOneField('RegionalPokemon', on_delete=models.CASCADE, null=True, related_name='+')
+    infancy = models.ForeignKey('Pokemon', on_delete=models.SET_NULL, null=True)
+
+
+class RegionalPokemon(AbstractPokemon):
+    class Variant(models.TextChoices):
+        ALOLA = 'AL', 'Alola'
+        GALAR = 'GL', 'Galar'
+
+    variant = models.CharField(choices=Variant.choices, max_length=50)
+    infancy = models.OneToOneField('RegionalPokemon', on_delete=models.SET_NULL, null=True)
+
+
+class FormPokemon(AbstractPokemon):
+    pass
 
