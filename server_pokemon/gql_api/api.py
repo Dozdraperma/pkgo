@@ -1,16 +1,14 @@
 import importlib
 import pkgutil
-from typing import Dict
-
 from types import ModuleType
+from typing import Dict
 
 from ariadne import load_schema_from_path, make_executable_schema
 
-from server_pokemon.settings import BASE_DIR
-from gql_api.gql_api_types import types
-
 import gql_api.resolvers as root_resolvers
 import gql_api.resolvers.objects as object_resolvers
+from gql_api.gql_api_types import types
+from server_pokemon.settings import BASE_DIR
 
 SCHEMA_PATH = BASE_DIR / 'gql_api' / 'schema.graphql'
 

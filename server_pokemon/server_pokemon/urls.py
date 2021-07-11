@@ -13,12 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from ariadne.contrib.django.views import GraphQLView
 from django.contrib import admin
 from django.urls import path
-from ariadne.contrib.django.views import GraphQLView
 
-from pokemon_base.views import test_page
 from gql_api.api import schema
+from pokemon_base.views import test_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),

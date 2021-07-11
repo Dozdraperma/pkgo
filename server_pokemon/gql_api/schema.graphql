@@ -6,4 +6,16 @@ type Query {
 type Pokemon {
     id: ID!
     name: String!
+    height: Int!
+    weight: Int!
+    maxCP: Int!
+    familyName: String!
+    baseAttack: Int!
+    baseDefense: Int!
+    baseStamina: Int!
+    primaryType: String!
+    secondaryType: String!
+    evolutionStage: Int!
+    infancy: Pokemon
+    infancyGender: String!
 }
