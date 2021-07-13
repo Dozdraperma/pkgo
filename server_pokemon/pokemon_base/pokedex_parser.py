@@ -51,7 +51,7 @@ def get_stage(raw_pok: Dict) -> int:
     return 2
 
 
-def get_infancy(raw_pok: Dict) -> str:
+def get_infancy(raw_pok: Dict, raw_pokemons: List[Dict]) -> str:
     past_branch = raw_pok['evolution'].get('pastBranch')
     if past_branch:
         return past_branch['name']
@@ -112,46 +112,34 @@ def find_firn(raw_pok: Dict) -> Optional[List[str]]:
         return
 
 
-def parse_pokemon(raw_pok: Dict) -> Dict:
+def parse_pokemon(raw: Dict) -> Pokemon:
     """
     Pokemon parser from json by rules below
-    :param raw_pok:
+    :param raw:
     :return:
     """
 
-    # Get values from first level of raw source
-    result = {
-        field.name: raw_pok.get(convert_to_camel_case(field.name))
-        for field in get_pokemon_fields()
+    # Append simple values
+    pokemon = {
+        'id': raw['dex'],
+        'name': raw['name'],
+        'height': int(raw['height'] * 100),
+        'weight': int(raw['weight'] * 100),
+        'max_cp': raw['maxCP'],
+        'family_name': raw['family']['name'],
+        'base_attack': raw['stats']['baseAttack'],
+        'base_defense': raw['stats']['baseDefense'],
+        'base_stamina': raw['stats']['baseStamina'],
+        'primary_type': raw['types'][0]['name'],
+        'secondary_type': raw['types'][1]['name'] if len(raw['types']) == 2 else '',
+        'stage': get_stage(raw),
     }
 
-    # Append base stats values
-    result |= get_base_stats(raw_pok)
-
-    # Append family name and types
-    result['family_name'] = raw_pok['family']['name']
-    result |= get_types(raw_pok)
-
-    # Append stage
-    result['stage'] = get_stage(raw_pok)
-
-    # Append regional form if exists
-    # result['regional_variant'] = find_regional(raw_pok)
-    result['regional_variant'] = None
-
-    # Reassign fields
-    result['infancy'] = get_infancy(raw_pok)
-    result['id'] = raw_pok['dex']
-
-    # Metrics enhancements
-    result['height'] = int(result['height'] * 100)
-    result['weight'] = int(result['weight'] * 100)
-
     # Validation
-    if errors := validate_pokemon(result):
+    if errors := validate_pokemon(pokemon):
         raise ValidationError(f'Validate failed due to error(s): {", ".join({str(error) for error in errors})}')
 
-    return result
+    return Pokemon(**pokemon)
 
 
 def pokemons_processor(poks: List[Dict]) -> List[Pokemon]:
@@ -196,8 +184,8 @@ def pokedex_parser(datapath: Path):
     with open(datapath, 'r') as pokedex:
         pokedex = json.loads(pokedex.read())
 
-    raw_pokemons = [parse_pokemon(pokemon) for pokemon in pokedex]
-    pokemons = pokemons_processor(raw_pokemons)
+    pokemons = [parse_pokemon(pokemon) for pokemon in pokedex]
+    pokemons = resolve_evolutions(pokemons, pokedex)
 
     # Assert we processed all pokemons from source
     assert len(pokedex) == len(pokemons), 'Number of pokemons not equal number of pokemons in pokedex'
