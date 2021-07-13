@@ -16,6 +16,6 @@ type Pokemon {
     primaryType: String!
     secondaryType: String!
     evolutionStage: Int!
-    infancy: Pokemon
-    infancyGender: String!
+    evolvesFrom: Pokemon
+    evolveGender: String!
 }
