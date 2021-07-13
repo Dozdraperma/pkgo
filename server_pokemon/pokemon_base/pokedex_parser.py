@@ -61,19 +61,27 @@ def find_infancy(pokemon: Pokemon, pokedex: List[Dict]) -> Optional[Tuple[str, s
     if not pokemon_dex['evolution'].get('pastBranch'):
         return
 
-    if 'Female' in pokemon_dex['evolution']['pastBranch']['name']:
+    if 'Female' in pokemon_dex['family']['name']:
         gender = 'Female'
-    if 'Male' in pokemon_dex['evolution']['pastBranch']['name']:
+    if 'Male' in pokemon_dex['family']['name']:
         gender = 'Male'
 
     infancy_name = pokemon_dex['evolution']['pastBranch']['name'].replace('Male', '').replace('Female', '').strip()
 
     # Find infancy in pokedex
     try:
-        infancy = list(filter(
+        infancies = list(filter(
             lambda pok: pok['name'] == infancy_name,
             pokedex
-        )).pop(0)
+        ))
+        if len(infancies) > 1:
+            infancy = list(filter(
+                lambda pok: gender in pok['family']['name'],
+                infancies
+            )).pop(0)
+        else:
+            infancy = infancies.pop(0)
+
     except KeyError:
         raise ParserError(f'Unable to find infancy for {pokemon["name"]}, search for - {infancy_name}')
 
