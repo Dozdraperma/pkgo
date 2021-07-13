@@ -42,17 +42,21 @@ header .Window {
 header .Window .Hero {
   grid-column: 1;
 }
-header .Window .Hero .menu {
+header .Window .menu {
+  display: none;
+  width: 50%;
   padding: 20px;
   background-color: #555555;
+  border-radius: 25px;
 }
-header .Window .Hero .menu input {
-  padding: 20px;
+header .Window .menu .X {
+  border: 1px solid #222222;
+  border-radius: 4px;
 }
-header .Window .Opponent {
+header .Opponent {
   grid-column: 2;
 }
-header .Window .PokemonBar {
+header .PokemonBar {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -61,14 +65,28 @@ header .Window .PokemonBar {
   background-color: rgba(5, 5, 5, 0.3);
   border-radius: 50px;
 }
-header .Window .PokemonBar button {
+header .PokemonBar div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+header .PokemonBar div input {
+  text-align: center;
+  color: #444444;
+  font-size: 0.7em;
+  font-style: italic;
+  width: 30px;
+  background: inherit;
+  border: 0;
+}
+header .PokemonBar div button {
   border-radius: 10px;
   border: #444444 solid;
   background-color: rgba(5, 5, 5, 0.3);
   height: 40px;
   width: 40px;
 }
-header .Window .PokemonBar button:hover {
+header .PokemonBar div button:hover {
   transform: scale(1.2);
 }
 
