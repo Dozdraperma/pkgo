@@ -21,26 +21,12 @@ def convert_to_camel_case(item: str) -> str:
     return components[0] + ''.join(x.title() for x in components[1:])
 
 
-def get_pokemon_fields():
+def get_pokemon_fields() -> List[str]:
     return [
         field
         for field in Pokemon._meta.get_fields()
         if field.name != 'pokemon'
     ]
-
-
-def get_base_stats(raw_pok: Dict) -> Dict:
-    return {
-        convert_to_snake_case(stat): value
-        for stat, value in raw_pok['stats'].items()
-    }
-
-
-def get_types(raw_pok: Dict) -> Dict:
-    return {
-        'primary_type': raw_pok['types'][0]['name'],
-        'secondary_type': raw_pok['types'][1]['name'] if len(raw_pok['types']) == 2 else ''
-    }
 
 
 def get_stage(raw_pok: Dict) -> int:
@@ -49,12 +35,6 @@ def get_stage(raw_pok: Dict) -> int:
     if not raw_pok['evolution']['pastBranch'].get('pastBranch'):
         return 1
     return 2
-
-
-def get_infancy(raw_pok: Dict, raw_pokemons: List[Dict]) -> str:
-    past_branch = raw_pok['evolution'].get('pastBranch')
-    if past_branch:
-        return past_branch['name']
 
 
 def validate_pokemon(pok: Dict) -> Set[Exception]:
@@ -100,18 +80,6 @@ def find_infancy(pokemon: Pokemon, pokedex: List[Dict]) -> Optional[Tuple[str, s
     return infancy['dex'], gender
 
 
-def find_regional(raw_pok: Dict) -> Optional[str]:
-    forms = ['Alola', 'Galar']
-    for form in forms:
-        return form if form in raw_pok['name'] else None
-
-
-def find_firn(raw_pok: Dict) -> Optional[List[str]]:
-    forms = raw_pok.pop('forms')
-    if not forms:
-        return
-
-
 def parse_pokemon(raw: Dict) -> Pokemon:
     """
     Pokemon parser from json by rules below
@@ -140,31 +108,6 @@ def parse_pokemon(raw: Dict) -> Pokemon:
         raise ValidationError(f'Validate failed due to error(s): {", ".join({str(error) for error in errors})}')
 
     return Pokemon(**pokemon)
-
-
-def pokemons_processor(poks: List[Dict]) -> List[Pokemon]:
-    """
-    TODO: Handle forms of pokemon
-    TODO: Handle region of pokemon
-    Create list of ORM objects from raw-dict
-    :param poks:
-    :return:
-    """
-    pokemons = [
-        Pokemon(**pok)
-        for pok in poks
-        if pok['stage'] == 0
-    ]
-
-    for pok in [pok for pok in poks if pok['stage'] == 1]:
-        pok['infancy'], pok['infancy_gender'] = find_infancy(pok, pokemons)
-        pokemons.append(Pokemon(**pok))
-
-    for pok in [pok for pok in poks if pok['stage'] == 2]:
-        pok['infancy'], pok['infancy_gender'] = find_infancy(pok, pokemons)
-        pokemons.append(Pokemon(**pok))
-
-    return pokemons
 
 
 def resolve_evolutions(pokemons: List[Pokemon], pokedex: List[Dict]) -> List[Pokemon]:
