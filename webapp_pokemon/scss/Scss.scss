@@ -46,11 +46,16 @@ header {
 
     .Hero {
       grid-column: 1;
+    }
       .menu{
+        display: none;
+        width: 50%;
         padding: 20px;
         background-color: #555555;
-        input{
-          padding: 20px;
+        border-radius: 25px;
+        .X{
+          border: 1px solid #222222;
+          border-radius: 4px;
         }
       }
     }
@@ -65,6 +70,19 @@ header {
       width:250px;
       background-color: rgba(5, 5, 5, .3);
       border-radius: 50px;
+      div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        input{
+          text-align: center;
+          color: #444444;
+          font-size: 0.7em;
+          font-style: italic;
+          width: 30px;
+          background: inherit;
+          border: 0;
+        }
         button {
           border-radius: 10px;
           border: #444444 solid;
@@ -72,11 +90,13 @@ header {
           height: 40px;
           width: 40px;
         }
-          button:hover {
-           transform: scale(1.2);
-         }
+
+        button:hover {
+          transform: scale(1.2);
+        }
+      }
     }
   }
-}
+
 
 
