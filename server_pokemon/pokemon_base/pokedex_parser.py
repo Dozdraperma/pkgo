@@ -1,10 +1,10 @@
 import json
 import re
 from pathlib import Path
-from typing import Dict, Set, List, Tuple, Iterable, Optional
+from typing import Dict, Set, List, Tuple, Optional
 
 from pokemon_base.exceptions import ParserError, ValidationError
-from pokemon_base.models import Pokemon, AbstractPokemon
+from pokemon_base.models import Pokemon
 
 
 def convert_to_snake_case(item: str) -> str:
@@ -67,20 +67,37 @@ def validate_pokemon(pok: Dict) -> Set[Exception]:
     return errors
 
 
-def find_infancy(pokemon: Dict, pokemons: Iterable[AbstractPokemon]) -> Tuple[AbstractPokemon, Optional[str]]:
+def find_infancy(pokemon: Pokemon, pokedex: List[Dict]) -> Optional[Tuple[str, str]]:
     gender = None
+    # Find pokemon in pokedex
+    try:
+        pokemon_dex = list(filter(
+            lambda pok: pok['name'] == pokemon.name,
+            pokedex
+        )).pop(0)
+    except KeyError:
+        raise ParserError(f'Unable to find {pokemon["name"]} in pokedex')
 
-    if 'Female' in pokemon['infancy']:
+    if not pokemon_dex['evolution'].get('pastBranch'):
+        return
+
+    if 'Female' in pokemon_dex['evolution']['pastBranch']['name']:
         gender = 'Female'
-    if 'Male' in pokemon['infancy']:
+    if 'Male' in pokemon_dex['evolution']['pastBranch']['name']:
         gender = 'Male'
 
-    infancy = pokemon['infancy'].replace('Male', '').replace('Female', '').strip()
+    infancy_name = pokemon_dex['evolution']['pastBranch']['name'].replace('Male', '').replace('Female', '').strip()
 
+    # Find infancy in pokedex
     try:
-        return set(filter(lambda x: x.name == infancy, pokemons)).pop(), gender
+        infancy = list(filter(
+            lambda pok: pok['name'] == infancy_name,
+            pokedex
+        )).pop(0)
     except KeyError:
-        raise ParserError(f'Unable to find infancy for {pokemon["name"]}')
+        raise ParserError(f'Unable to find infancy for {pokemon["name"]}, search for - {infancy_name}')
+
+    return infancy['dex'], gender
 
 
 def find_regional(raw_pok: Dict) -> Optional[str]:
@@ -158,6 +175,19 @@ def pokemons_processor(poks: List[Dict]) -> List[Pokemon]:
     for pok in [pok for pok in poks if pok['stage'] == 2]:
         pok['infancy'], pok['infancy_gender'] = find_infancy(pok, pokemons)
         pokemons.append(Pokemon(**pok))
+
+    return pokemons
+
+
+def resolve_evolutions(pokemons: List[Pokemon], pokedex: List[Dict]) -> List[Pokemon]:
+    for pokemon in pokemons:
+        infancy_dex, gender = find_infancy(pokemon, pokedex) or (None, None)
+
+        if not infancy_dex:
+            continue
+
+        pokemon.evolves_from_id = infancy_dex
+        pokemon.evolve_gender = gender
 
     return pokemons
 
