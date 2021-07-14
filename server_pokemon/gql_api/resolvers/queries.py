@@ -13,3 +13,7 @@ def resolve_hello(*_):
 @gqt.query.field('getPokemon')
 def resolve_pokemon(obj, info, id):
     return Pokemon.objects.get(id=id)
+
+@gqt.query.field('getPokemons')
+def resolve_pokemons(*_):
+    return Pokemon.objects.all()

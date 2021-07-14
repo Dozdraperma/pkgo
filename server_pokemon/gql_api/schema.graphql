@@ -1,6 +1,7 @@
 type Query {
     hello: String!
     getPokemon(id: ID!): Pokemon!
+    getPokemons: [Pokemon!]!
 }
 
 type Pokemon {
