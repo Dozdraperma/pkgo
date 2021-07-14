@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 django = "*"
 ariadne = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 
