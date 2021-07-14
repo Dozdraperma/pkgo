@@ -13,3 +13,22 @@ for (let elem of document.querySelectorAll(".PokemonBar div button")){
 //     document.querySelector('.PokemonBar input').setAttribute(value,'document.querySelector("form input.PokemonCP").value')
 //   }
 // })
+
+let searchWord = ""
+let buvisan = document.querySelector(".PokemonID")
+buvisan.addEventListener("focus", () => searchWord = buvisan.value.toString())
+buvisan.addEventListener("input",() => searchWord = buvisan.value.toString())
+
+async function SendPost(){
+  await fetch('http://localhost:8000/api', {
+     method: 'POST',
+     headers: {
+       'Content-Type': 'application/json',
+       'Accept': 'application/json'},
+     mode:"no-cors",
+     body: JSON.stringify({query:"{ hello }"})
+  }).then((bab) =>bab.json()).then((json)=>alert(json));
+}
+
+let X = document.querySelector(".menu .X")
+X.addEventListener("click", SendPost)
