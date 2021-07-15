@@ -2,6 +2,18 @@ type Query {
     hello: String!
     getPokemon(id: ID!): Pokemon!
     getPokemons: [Pokemon!]!
+    searchPokemons(search: SearchInput): [Pokemon]
+}
+
+input SearchInput {
+    id: ID
+    name: SearchNameInput
+    type: String
+}
+
+input SearchNameInput {
+    includeEvolutions: Boolean!
+    name: String!
 }
 
 type Pokemon {
@@ -15,7 +27,7 @@ type Pokemon {
     baseDefense: Int!
     baseStamina: Int!
     primaryType: String!
-    secondaryType: String!
+    secondaryType: String
     evolutionStage: Int!
     evolvesFrom: Pokemon
     evolvesTo: [Pokemon]

@@ -54,7 +54,7 @@ def resolve_primary_type(obj: Pokemon, info):
 
 @gqt.pokemon.field('secondaryType')
 def resolve_secondary_type(obj: Pokemon, info):
-    return obj.secondary_type
+    return obj.secondary_type or None
 
 
 @gqt.pokemon.field('evolutionStage')
@@ -70,6 +70,7 @@ def resolve_evolves_from(obj: Pokemon, info):
 @gqt.pokemon.field('evolveGender')
 def resolve_evolve_gender(obj: Pokemon, info):
     return obj.evolve_gender
+
 
 @gqt.pokemon.field('evolvesTo')
 def resolve_evolves_to(obj: Pokemon, info):
