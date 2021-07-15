@@ -16,6 +16,26 @@ input SearchNameInput {
     name: String!
 }
 
+enum PokemonType {
+    Normal
+    Fire
+    Water
+    Grass
+    Electric
+    Ice
+    Fighting
+    Poison
+    Ground
+    Flying
+    Psychic
+    Bug
+    Rock
+    Dark
+    Dragon
+    Steel
+    Fairy
+}
+
 type Pokemon {
     id: ID!
     name: String!
@@ -26,8 +46,8 @@ type Pokemon {
     baseAttack: Int!
     baseDefense: Int!
     baseStamina: Int!
-    primaryType: String!
-    secondaryType: String
+    primaryType: PokemonType!
+    secondaryType: PokemonType
     evolutionStage: Int!
     evolvesFrom: Pokemon
     evolvesTo: [Pokemon]
