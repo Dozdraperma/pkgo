@@ -16,9 +16,10 @@ class Pokemon(models.Model):
         PSYCHIC = 'PY', 'Psychic'
         BUG = 'BG', 'Bug'
         ROCK = 'RK', 'Rock'
-        GHOST = 'DK', 'Dark'
+        GHOST = 'GH', 'Ghost'
         DRAGON = 'DG', 'Dragon'
         STEEL = 'ST', 'Steel'
+        DARK = 'DK', 'Dark'
         FAIRY = 'FA', 'Fairy'
 
     class Stage(models.IntegerChoices):

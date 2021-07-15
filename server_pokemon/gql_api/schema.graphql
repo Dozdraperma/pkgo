@@ -1,20 +1,40 @@
 type Query {
     hello: String!
     getPokemon(id: ID!): Pokemon!
-    getPokemons: [Pokemon!]!
+    getPokemons(sort: SortingInput): [Pokemon!]!
     searchPokemons(search: SearchInput): [Pokemon]
 }
 
 input SearchInput {
     id: ID
     name: SearchNameInput
-    type: String
+    type: PokemonType
+    sort: SortingInput
 }
 
 input SearchNameInput {
     includeEvolutions: Boolean!
     name: String!
 }
+
+input SortingInput {
+    sortBy: [Sorting!]!
+}
+
+enum Sorting {
+    id
+    name
+    height
+    weight
+    max_cp
+    base_attack
+    base_defense
+    base_stamina
+    primary_type
+    secondary_type
+    stage
+}
+
 
 enum PokemonType {
     Normal
@@ -33,6 +53,7 @@ enum PokemonType {
     Dark
     Dragon
     Steel
+    Ghost
     Fairy
 }
 
