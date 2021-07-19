@@ -2,6 +2,9 @@ from django.db import models
 
 
 class Pokemon(models.Model):
+    def __str__(self):
+        return self.name
+
     class Type(models.TextChoices):
         NORMAL = 'NR', 'Normal'
         FIRE = 'FR', 'Fire'
