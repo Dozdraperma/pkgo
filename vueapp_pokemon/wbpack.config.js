@@ -1,4 +1,4 @@
-var ExtractTextPlugin = require("extract-text-webpack-plugin")
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
   // другие настройки...
@@ -14,6 +14,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin("style.css")
+    new ExtractTextPlugin('style.css')
   ]
 }
