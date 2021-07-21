@@ -1,9 +1,5 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+var ExtractTextPlugin = require("extract-text-webpack-plugin")
 
-createApp(App).use(router).mount('#app')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
 module.exports = {
   // другие настройки...
   module: {
@@ -18,6 +14,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin('style.css')
+    new ExtractTextPlugin("style.css")
   ]
 }

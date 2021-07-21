@@ -1,13 +1,17 @@
 <template>
 <div class="PokemonSlot">
-  <p v-if="Pokemon.cp">CP <span>{{ Pokemon.cp }}</span></p>
+  <div class="remove"
+       v-bind:style="{visibility: isVisibleinfo}"
+       @click="onRemove"
+></div>
+  <p v-bind:style="{visibility: isVisibleinfo}">CP <span>{{ Pokemon.cp }}</span></p>
   <button
     v-on:click="openMenu"
   >
   </button>
-  <p>{{ Pokemon.name }}</p>
+  <p id="name" v-bind:style="{visibility: isVisibleinfo}">|{{ Pokemon.name }}|</p>
   <div class="PokemonMenu"
-       v-show="isVisible"
+       v-bind:style="{ visibility: isVisible } "
   >
   <form @submit.prevent="onSubmit">
     <input type="text" placeholder="Имя" v-model="name">
@@ -26,9 +30,18 @@ export default {
       this.Pokemon.id = Date.now()
       this.Pokemon.name = this.name
       this.Pokemon.cp = this.sp
+      this.isVisibleinfo = 'visible'
     },
     openMenu () {
-      this.isVisible = !this.isVisible
+      this.isVisible === 'hidden' ? this.isVisible = 'visible' : this.isVisible = 'hidden'
+    },
+    onRemove () {
+      this.Pokemon.id = ''
+      this.Pokemon.name = ''
+      this.Pokemon.cp = ''
+      this.isVisibleinfo = 'hidden'
+      this.sp = ''
+      this.name = ''
     }
   },
   data () {
@@ -36,50 +49,82 @@ export default {
       Pokemon: { id: '', name: '', cp: '' },
       sp: '',
       name: '',
-      isVisible: false
+      isVisible: 'hidden',
+      isVisibleinfo: 'hidden'
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .PokemonSlot{
   padding: 5px 5px;
   position: relative;
-  background-image: url("C:Users/Dan/All project/pkgo/vueapp_pokemon/src/assets/pokeball.svg");
-}
-.PokemonSlot button{
-  border-radius: 10px;
-  box-shadow: 0 0 5px 3px rgba(123, 161, 160, 0.2);
-  padding: 30px;
-  border: 2px solid #bad7db;
-  background: linear-gradient(90deg, #ffffff ,#f7fdf3);
-}
-.PokemonSlot button:hover{
-  box-shadow: 0 0 5px 7px rgba(123, 161, 160, 0.8);
-  transition-duration: 200ms;
-}
-p {
-  margin: 7px;
-}
-.PokemonSlot .PokemonMenu{
-  z-index: 2;
-  background: #ffffff;
-  position: absolute;
-  border-radius: 10px;
-  padding: 5px;
-  box-shadow: 0 0 5px 3px rgba(123, 161, 160, 0.3);
-}
-.PokemonSlot .PokemonMenu button {
-  padding: 2px 5px;
-}
-.PokemonSlot .PokemonMenu form input {
-  border-radius: 20px;
-  border: none;
-  background: #d7ecef;
-  padding: 7px;
-  text-align: center;
-  margin: 5% 0;
-  width: 70%;
+    button{
+      border-radius: 10px;
+      box-shadow: 0 0 5px 3px rgba(123, 161, 160, 0.2);
+      padding: 30px;
+      border: 2px solid #bad7db;
+      background: linear-gradient(90deg, #ffffff ,#f7fdf3);
+    }
+    button:hover{
+      box-shadow: 0 0 5px 7px rgba(123, 161, 160, 0.8);
+      transition-duration: 200ms;
+      }
+
+  p {
+
+    margin: 7px;
+    font-size: 10px;
+    font-weight: bold;
+    span{
+      font-size: 20px;
+    }
+  }
+
+  #name {
+    margin: 7px;
+    font-size: 15px;
+    font-weight: bold;
+  }
+
+  .PokemonMenu{
+    visibility: hidden;
+    z-index: 2;
+    background: #ffffff;
+    position: absolute;
+    border-radius: 10px;
+    padding: 5px;
+    box-shadow: 0 0 5px 3px rgba(123, 161, 160, 0.3);
+    button {
+      padding: 2px 5px;
+    }
+  }
+  form input {
+    border-radius: 20px;
+    border: none;
+    background: #d7ecef;
+    padding: 7px;
+    text-align: center;
+    margin: 5% 0;
+    width: 70%;
+  }
+  .remove{
+    opacity: 0;
+    z-index: 4;
+    background-image: url('media/free-icon-cross-black-circular-button-54473.svg');
+    background-repeat: no-repeat;
+    background-size: 50px 50px;
+    background-position: center ;
+    position:absolute;
+    top: 39px;
+    left: 15px;
+    width: 70px;
+    height: 70px;
+  }
+  .remove:hover{
+    opacity: 0.5;
+    transition-duration: 500ms;
+  }
 }
 </style>
