@@ -5,8 +5,8 @@
   >
     <form @submit.prevent="onSubmit">
       <input type="text" placeholder="Имя" v-model="name" >
-      <div class="search" v-for="item in items" :key="item">
-        {{ item }}
+      <div class="search" >
+        <button v-for="item in listPokemon" :key="item">{{ item.name }}</button>
       </div>
       <input type="text" placeholder="СР" maxlength="4" v-model="sp">
       <br>
@@ -30,16 +30,21 @@ export default {
   },
   watch: {
     name: function (name) {
-      const fet = '{searchPokemons(search: {name: {name:"' + name + '" includeEvolutions:true}}) {name}}'
-      console.log(fet)
-      fetch('http://127.0.0.1:8000/api', {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(fet.value)
-      }).then((response) => response.json()).then((json) => console.log(json))
+      this.listPokemon = []
+      const data = { query: '{searchPokemons(search: {name:' + '"' + name + '"' + 'includeEvolutions:false}) {name}}' }
+      console.log(data)
+      if (name !== '') {
+        fetch('http://127.0.0.1:8000/api', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        }).then((response) => response.json())
+          .then((json) => { if (json.data.searchPokemons !== null) { for (let i = 0; i <= json.data.searchPokemons.length - 1; i++) { this.listPokemon.push(json.data.searchPokemons[i]) } } })
+          .then(() => console.log(this.listPokemon))
+      }
     }
   },
   data () {
@@ -47,7 +52,8 @@ export default {
       Pokemon: { id: '', name: '', cp: '' },
       sp: '',
       name: '',
-      pokemonser: ''
+      pokemonser: '',
+      listPokemon: []
     }
   }
 }
@@ -80,8 +86,19 @@ form input {
   text-align: center;
   margin: 5px 0;
   width: 70%;
-}
 
+}
+  form {
+    position: relative;
+    .search {
+      background-color: #2c3e50;
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      height: 100px;
+      width: max-content;
+    }
+  }
 button {
   font-family: 'Encode Sans SC', "Helvetica", "Roboto", sans-serif;
   padding: 4px 9px;
