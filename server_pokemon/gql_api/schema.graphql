@@ -7,14 +7,10 @@ type Query {
 
 input SearchInput {
     id: ID
-    name: SearchNameInput
+    name: String!
     type: PokemonType
     sort: SortingInput
-}
-
-input SearchNameInput {
     includeEvolutions: Boolean!
-    name: String!
 }
 
 input SortingInput {

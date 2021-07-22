@@ -9,14 +9,14 @@ from pokemon_base.models import Pokemon
 @gqt.query.field('searchPokemons')
 @convert_kwargs_to_snake_case
 def resolve_search_pokemons(*_, search):
+    query = Pokemon.objects.all()
     if dex := search.get('id'):
         query = Pokemon.objects.filter(id__exact=dex).all()
 
-    if name_input := search.get('name'):
-        name = name_input['name']
+    if name := search.get('name'):
         query_filter = Q(name__icontains=name)
 
-        if name_input['include_evolutions']:
+        if search['include_evolutions']:
             query_filter = (
                     query_filter
                     | Q(evolves_from__name__icontains=name)
