@@ -47,6 +47,7 @@ export default {
 
 <style lang="scss" scoped>
 .PokemonSlot {
+  font-family: "Montserrat", "Helvetica", "Roboto", sans-serif;
   padding: 5px 5px;
   position: relative;
   p {
