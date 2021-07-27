@@ -5,8 +5,10 @@
   >
     <form @submit.prevent="onSubmit">
       <input type="text" placeholder="Имя" v-model="name" >
-      <div class="search" >
-        <button v-for="item in listPokemon" :key="item">{{ item.name }}</button>
+      <div class="wrappy">
+        <div class="search" v-show="vis">
+          <button  @click="ekanS (item.name)" v-for="item in listPokemon" :key="item">{{ item.name }}</button>
+        </div>
       </div>
       <input type="text" placeholder="СР" maxlength="4" v-model="sp">
       <br>
@@ -21,6 +23,9 @@ export default {
   props: ['isVisibl'],
   name: 'PokeMenu',
   methods: {
+    ekanS (item) {
+      this.name = item
+    },
     onSubmit () {
       this.$emit('onsubmit', {
         name: this.name,
@@ -30,10 +35,10 @@ export default {
   },
   watch: {
     name: function (name) {
-      this.listPokemon = []
       const data = { query: '{searchPokemons(search: {name:' + '"' + name + '"' + 'includeEvolutions:false}) {name}}' }
-      console.log(data)
       if (name !== '') {
+        this.vis = false
+        this.listPokemon = []
         fetch('http://127.0.0.1:8000/api', {
           method: 'POST',
           mode: 'cors',
@@ -42,9 +47,15 @@ export default {
           },
           body: JSON.stringify(data)
         }).then((response) => response.json())
-          .then((json) => { if (json.data.searchPokemons !== null) { for (let i = 0; i <= json.data.searchPokemons.length - 1; i++) { this.listPokemon.push(json.data.searchPokemons[i]) } } })
-          .then(() => console.log(this.listPokemon))
-      }
+          .then((json) => {
+            if (!(json.data.searchPokemons.length === 1 && json.data.searchPokemons[0].name.toLowerCase() === name.toLowerCase())) {
+              for (let i = 0; i <= json.data.searchPokemons.length - 1; i++) {
+                this.listPokemon.push(json.data.searchPokemons[i])
+              }
+              this.vis = true
+            }
+          })
+      } else { this.listPokemon = []; this.vis = false }
     }
   },
   data () {
@@ -52,8 +63,8 @@ export default {
       Pokemon: { id: '', name: '', cp: '' },
       sp: '',
       name: '',
-      pokemonser: '',
-      listPokemon: []
+      listPokemon: [],
+      vis: false
     }
   }
 }
@@ -89,14 +100,20 @@ form input {
 
 }
   form {
-    position: relative;
-    .search {
-      background-color: #2c3e50;
+    .wrappy {
       display: flex;
-      flex-direction: column;
-      position: absolute;
-      height: 100px;
-      width: max-content;
+      justify-content: center;
+      position: relative;
+      .search {
+        background-color: #2c3e50;
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        height: 184px;
+        width: 86%;
+        overflow-y: scroll;
+        transform: translateX(4%);
+      }
     }
   }
 button {
