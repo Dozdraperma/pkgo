@@ -3,6 +3,7 @@
   <router-link to="/">Home</router-link>
   <router-link to="/About">About</router-link>
   <router-link to="/Battles">Battles</router-link>
+  <router-link to="/ListPoke">List of Pokemon</router-link>
 </div>
 </template>
 
