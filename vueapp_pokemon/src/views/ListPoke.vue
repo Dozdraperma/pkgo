@@ -2,7 +2,7 @@
 <div class="ListOfPoke">
   <section>
     <div class="SearchInput">
-      <input type="text" v-model="InputName">
+      <input type="text" v-model="InputName" placeholder="Search">
     </div>
   </section>
   <section>
@@ -11,24 +11,10 @@
     <button v-on:click="gener = !gener">Generation</button>
     <button v-on:click="legen = !legen">Legendary</button>
     <button v-on:click="rarly = !rarly">Rarly in pkgo</button>
-    <div class="listtype" v-show="typ">
-      <button @click="swap ('Normal')" class="POKEMON_TYPE_NORMAL">Normal</button>
-      <button @click="swap ('Fighting')" class="POKEMON_TYPE_FIGHTING">Fighting</button>
-      <button @click="swap ('Flying')" class="POKEMON_TYPE_FLYING">Flying</button>
-      <button @click="swap ('Poison')" class="POKEMON_TYPE_POISON">Poison</button>
-      <button @click="swap ('Ground')" class="POKEMON_TYPE_GROUND">Ground</button>
-      <button @click="swap ('Rock')" class="POKEMON_TYPE_ROCK">Rock</button>
-      <button @click="swap ('Bug')" class="POKEMON_TYPE_BUG">Bug</button>
-      <button @click="swap ('Ghost')" class="POKEMON_TYPE_GHOST">Ghost</button>
-      <button @click="swap ('Steel')" class="POKEMON_TYPE_STEEL">Steel</button>
-      <button @click="swap ('Fire')" class="POKEMON_TYPE_FIRE">Fire</button>
-      <button @click="swap ('Water')" class="POKEMON_TYPE_WATER">Water</button>
-      <button @click="swap ('Grass')" class="POKEMON_TYPE_GRASS">Grass</button>
-      <button @click="swap ('Electric')" class="POKEMON_TYPE_ELECTRIC">Electric</button>
-      <button @click="swap ('Psychic')" class="POKEMON_TYPE_PSYCHIC">Psychic</button>
-      <button @click="swap ('Ice')" class="POKEMON_TYPE_ICE">Ice</button>
-      <button @click="swap ('Dragon')" class="POKEMON_TYPE_DRAGON">Dragon</button>
-      <button @click="swap ('Dark')" class="POKEMON_TYPE_DARK">Dark</button>
+    <div class="listtype">
+      <div class="tap" v-show="typ" v-for="tap in Typi" :key="tap">
+        <button @click="swap (tap)" v-bind:class="'type POKEMON_TYPE_' + tap.toUpperCase()">{{ tap }}</button>
+      </div>
     </div>
     <div class="listtype" v-show="gener"> next</div>
     <div class="listtype" v-show="legen">mewtwo mew lugia</div>
@@ -38,7 +24,12 @@
   <section>
   <div class="resolve">
     <div class="PokemonCart" v-for="item in FilteredPoke" :key="item">
-      <div class="id">{{ item.id }}</div> <div class="imya">{{ item.name }}</div> <div class="primaryType">{{ item.primaryType }}</div> <div class="secondaryType">{{ item.secondaryType }}</div> <div class="MaxCP">MaxCP: {{  item.maxCP }}</div>
+      <div class="id">{{ item.id }}</div>
+      <div class="imya">{{ item.name }}</div>
+      <img :src="require(`../../src/views/media/Pokemon/pokemon_icon_${('1000' + item.id).slice(-3)}_00.png`)" alt="">
+      <div v-bind:class="'type primaryType POKEMON_TYPE_' + item.primaryType.toUpperCase()">{{ item.primaryType }}</div>
+      <div v-if="item.secondaryType" v-bind:class="'type secondaryType POKEMON_TYPE_' + item.secondaryType.toUpperCase()">{{ item.secondaryType }}</div>
+      <div class="MaxCP">MaxCP: {{  item.maxCP }}</div>
     </div>
   </div>
   </section>
@@ -56,7 +47,27 @@ export default {
       gener: false,
       legen: false,
       rarly: false,
-      type_sort: ''
+      type_sort: '',
+      Typi: [
+        'Normal',
+        'Fire',
+        'Water',
+        'Grass',
+        'Electric',
+        'Ice',
+        'Fighting',
+        'Poison',
+        'Ground',
+        'Flying',
+        'Psychic',
+        'Bug',
+        'Rock',
+        'Dark',
+        'Dragon',
+        'Steel',
+        'Ghost',
+        'Fairy'
+      ]
     }
   },
   methods: {
@@ -152,30 +163,59 @@ export default {
   background-color:#c02038
 }
 .ListOfPoke {
+  margin: 0 15%;
   .SearchInput{
     margin: 20px 0;
+    input{
+      width: 75%;
+      height: 2em;
+      font-size: 26px;
+      text-align: center;
+      font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
+      color: #312f2f;
+      background-color: #d7ecef;
+      border: 0;
+      border-radius: 25px;
+    }
   }
+  .filter{
+    background-color: #d7ecef;
+  }
+  .filter > button{
+    background-color: #a4eff3;
+    margin: 5px;
+    border: 0;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
+  }
+
   .listtype {
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin: 10px 0;
+    margin: 0;
     button {
-      color: white;
-      text-shadow: 1px 1px #312f2f;
-      border: none;
-      width: 60px;
-      padding: 2px 5px;
       margin: 0 2px;
-      border-radius: 5px;
     }
+  }
+  .type{
+    color: white;
+    text-shadow: 1px 1px #312f2f;
+    border: none;
+    width: 60px;
+    padding: 2px 5px;
+    border-radius: 5px;
   }
 .PokemonCart{
   border: 2px solid gold;
-  margin: 10px 50px;
+  margin: 10px 5px;
+  padding: 15px;
   display: grid;
   grid-template-columns: 1fr 3fr 4fr 1fr;
   grid-template-rows: 20px 150px 20px;
+  align-items: center;
   .id{
     color: gray;
     grid-column-start: 1;
@@ -192,6 +232,14 @@ export default {
     color: #312f2f;
     font-size: 25px;
     font-weight: bold;
+  }
+  img{
+    max-height: 100%;
+    max-width: 100%;
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row: 2;
+    justify-self: center;
   }
   .primaryType{
     grid-column-start: 1;
@@ -214,9 +262,6 @@ export default {
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     margin: 20px;
-    .PokemonCart{
-
-    }
   }
 }
 </style>

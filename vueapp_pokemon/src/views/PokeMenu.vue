@@ -35,7 +35,7 @@ export default {
   },
   watch: {
     name: function (name) {
-      const data = { query: '{searchPokemons(search: {name:' + '"' + name + '"' + 'includeEvolutions:false}) {name}}' }
+      const data = { query: `{searchPokemons(search: {name:"${name}"includeEvolutions:false}) {name}}` }
       if (name !== '') {
         this.vis = false
         this.listPokemon = []
