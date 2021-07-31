@@ -1,5 +1,5 @@
 <template>
-<div class="ListOfPoke">
+<div class="ListOfPoke" >
   <section>
     <div class="SearchInput">
       <input type="text" v-model="InputName" placeholder="Search">
@@ -23,7 +23,7 @@
   </section>
   <section>
   <div class="resolve">
-    <div class="PokemonCart" v-for="item in FilteredPoke" :key="item">
+    <div class="PokemonCart" v-for="item in PaginedPoke" :key="item">
       <div class="id">{{ item.id }}</div>
       <div class="imya">{{ item.name }}</div>
       <img :src="require(`../../src/views/media/Pokemon/pokemon_icon_${('1000' + item.id).slice(-3)}_00.png`)" alt="">
@@ -48,6 +48,7 @@ export default {
       legen: false,
       rarly: false,
       type_sort: '',
+      cut_number: 0,
       Typi: [
         'Normal',
         'Fire',
@@ -73,7 +74,14 @@ export default {
   methods: {
     swap (type) {
       this.type_sort === type ? this.type_sort = '' : this.type_sort = type
-      console.log(this.type_sort)
+    },
+    next_cut () {
+      this.cut_number++
+    },
+    Kebov () {
+      if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 50) {
+        this.next_cut()
+      }
     }
   },
   computed: {
@@ -87,6 +95,10 @@ export default {
           } else return elem
         }
       })
+    },
+    PaginedPoke: function () {
+      const end = this.cut_number * 12 + 12
+      return this.FilteredPoke.slice(0, end)
     }
   },
   created () {
@@ -102,7 +114,11 @@ export default {
         for (let i = 0; i <= json.data.searchPokemons.length - 1; i++) {
           this.listPokemon.push(json.data.searchPokemons[i])
         }
-      }).then(() => { console.log(this.listPokemon) })
+      })
+    window.addEventListener('scroll', this.Kebov)
+  },
+  unmounted () {
+    window.removeEventListener('scroll', this.Kebov)
   }
 }
 </script>
