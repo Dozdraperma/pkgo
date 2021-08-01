@@ -9,4 +9,4 @@ class Command(BaseCommand):
     help = 'Custom test'
 
     def handle(self, *args, **options):
-        PokemonGameinfo()._collect_raw_pokemon_info(1, 'bulbasaur')
+        PokemonGameinfo()._collect_raw_pokemon_info(2, 'ivysaur')
