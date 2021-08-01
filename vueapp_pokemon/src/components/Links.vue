@@ -13,22 +13,26 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .links{
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   flex-direction: row;
-  justify-content: space-around;
   align-self: end;
+    a {
+      background-color: #2c3e50;
+      padding: 20px 0;
+      text-decoration: none;
+      color: white;
+      font-size: 30px;
+      font-family: "Roboto", "Helvetica", "Roboto", sans-serif;
+      font-weight: normal;
+    }
+  :hover{
+    background-color: #d7ecef;
+    color: #2c3e50;
+    transition-duration: 0.2s;
+  }
 }
-a {
-  text-decoration: none;
-  color: #2c3e50;
-  font-size: 30px;
-  font-family: "Montserrat", "Helvetica", "Roboto", sans-serif;
-  font-weight: bold;
-}
-a:hover{
-  transform: scale(1.2);
-  transition-duration: 100ms;
-}
+
 </style>

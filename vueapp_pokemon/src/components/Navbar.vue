@@ -1,6 +1,6 @@
 <template>
-<div>
-  <img src="@/assets/logo.png" alt='logo'>
+<div class="head">
+  <img src="@/assets/pngkit_eevee-png_211496.png" alt='logo'>
   <Links />
 </div>
 </template>
@@ -14,7 +14,8 @@ export default {
 </script>
 
 <style scoped>
-div {
-  background: #38a6eb;
+.head {
+  padding-top: 3px;
+  background: #2c3e50;
 }
 </style>

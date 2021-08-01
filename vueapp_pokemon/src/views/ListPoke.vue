@@ -11,26 +11,26 @@
     <button v-on:click="gener = !gener">Generation</button>
     <button v-on:click="legen = !legen">Legendary</button>
     <button v-on:click="rarly = !rarly">Rarly in pkgo</button>
-    <div class="listtype">
-      <div class="tap" v-show="typ" v-for="tap in Typi" :key="tap">
-        <button @click="swap (tap)" v-bind:class="'type POKEMON_TYPE_' + tap.toUpperCase()">{{ tap }}</button>
-      </div>
+    <div class="listtype" v-show="typ">
+      <button @click="swap (tap, index)" v-bind:class="`type POKEMON_TYPE_${tap.toUpperCase()}`" v-for="(tap, index) in Typi" :key="tap">{{ tap }}</button>
     </div>
-    <div class="listtype" v-show="gener"> next</div>
-    <div class="listtype" v-show="legen">mewtwo mew lugia</div>
-    <div class="listtype" v-show="rarly">mr. mime mr. rime sirfetch'd</div>
+    <div class="gener" v-show="gener">
+      <button v-for="(gener) in geners" :key="gener">{{ gener }}</button>
+    </div>
+    <div class="listtyp" v-show="legen">mewtwo mew lugia</div>
+    <div class="listtyp" v-show="rarly">mr. mime mr. rime sirfetch'd</div>
   </div>
   </section>
   <section>
   <div class="resolve">
-    <div class="PokemonCart" v-for="item in PaginedPoke" :key="item">
+    <router-link :to="{ name: 'Poknik', params: { Poknik: item.name }}" class="PokemonCart" v-for="item in PaginedPoke" :key="item">
       <div class="id">{{ item.id }}</div>
       <div class="imya">{{ item.name }}</div>
       <img :src="require(`../../src/views/media/Pokemon/pokemon_icon_${('1000' + item.id).slice(-3)}_00.png`)" alt="">
-      <div v-bind:class="'type primaryType POKEMON_TYPE_' + item.primaryType.toUpperCase()">{{ item.primaryType }}</div>
-      <div v-if="item.secondaryType" v-bind:class="'type secondaryType POKEMON_TYPE_' + item.secondaryType.toUpperCase()">{{ item.secondaryType }}</div>
+      <div v-bind:class="`type primaryType POKEMON_TYPE_${item.primaryType.toUpperCase()}`">{{ item.primaryType }}</div>
+      <div v-if="item.secondaryType" v-bind:class="`type secondaryType POKEMON_TYPE_${item.secondaryType.toUpperCase()}`">{{ item.secondaryType }}</div>
       <div class="MaxCP">MaxCP: {{  item.maxCP }}</div>
-    </div>
+    </router-link>
   </div>
   </section>
 </div>
@@ -41,6 +41,7 @@ export default {
   name: 'ListPoke',
   data () {
     return {
+      borderis: '1px solid gray',
       listPokemon: [],
       InputName: '',
       typ: false,
@@ -72,8 +73,17 @@ export default {
     }
   },
   methods: {
-    swap (type) {
-      this.type_sort === type ? this.type_sort = '' : this.type_sort = type
+    swap (type, index) {
+      if (this.type_sort === type) {
+        this.type_sort = ''
+        document.querySelector('.listtype').children[index].classList.remove('active')
+      } else {
+        if (this.type_sort !== '') {
+          document.querySelector('.active').classList.remove('active')
+        }
+        this.type_sort = type
+        document.querySelector('.listtype').children[index].classList.add('active')
+      }
     },
     next_cut () {
       this.cut_number++
@@ -183,7 +193,7 @@ export default {
   .SearchInput{
     margin: 20px 0;
     input{
-      width: 75%;
+      width: 100%;
       height: 2em;
       font-size: 26px;
       text-align: center;
@@ -197,35 +207,50 @@ export default {
   .filter{
     background-color: #d7ecef;
   }
+
   .filter > button{
-    background-color: #a4eff3;
+    color: #312f2f;
+    background-color: inherit;
     margin: 5px;
-    border: 0;
+    border: 1px solid #7e8587;
     border-radius: 5px;
     padding: 5px 10px;
-    font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
+    font-family: "Montserrat", Verdana, Arial, sans-serif;
+    }
+    .filter > button:hover{
+      background-color: #2c3e50;
+      color: white;
+      transition-duration: 0.1s;
   }
 
   .listtype {
-    border-top: 1px solid rgba(0, 0, 0, 0.15);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     margin: 0;
-    button {
-      margin: 0 2px;
-    }
+
+    .active {
+       border: 2px solid red;
+     }
+    button:hover{
+       background-color: #b8b8d0;
+       transition-duration: 0.2s;
+     }
   }
   .type{
+    margin: 2px;
     color: white;
     text-shadow: 1px 1px #312f2f;
-    border: none;
+    border: 2px solid rgba(0, 0, 0, 0);
     width: 60px;
     padding: 2px 5px;
     border-radius: 5px;
   }
 .PokemonCart{
-  border: 2px solid gold;
+  background: #fffefa;
+  text-decoration: none;
+  border: 4px solid #312f2f;
+
   margin: 10px 5px;
   padding: 15px;
   display: grid;
@@ -271,7 +296,12 @@ export default {
     grid-column-start: 3;
     grid-column-end: 5;
     grid-row: 3;
+    color: #312f2f;
   }
+}
+  .PokemonCart:hover{
+    background: #d7ecef;
+    transition-duration: .1s;
 }
   .resolve{
     display: grid;

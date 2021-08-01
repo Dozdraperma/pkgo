@@ -19,7 +19,6 @@ export default {
 <style lang="scss" scoped>
 .side {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 2fr max-content;
   .PokemonBar {
     grid-column: 1;
