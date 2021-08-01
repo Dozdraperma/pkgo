@@ -4,7 +4,7 @@
        v-bind:style="{ visibility: isVisibl } "
   >
     <form @submit.prevent="onSubmit">
-      <input type="text" placeholder="Имя" v-model="name" >
+      <input type="text" placeholder="Имя" v-model="name">
       <div class="wrappy">
         <div class="search" v-show="vis">
           <button  @click="ekanS (item.name)" v-for="item in listPokemon" :key="item">{{ item.name }}</button>
@@ -27,16 +27,18 @@ export default {
       this.name = item
     },
     onSubmit () {
-      this.$emit('onsubmit', {
-        name: this.name,
-        sp: this.sp
-      })
+      if (this.sp > 9) {
+        this.$emit('onsubmit', {
+          name: this.name,
+          sp: this.sp
+        })
+      }
     }
   },
   watch: {
     name: function (name) {
       const data = { query: `{searchPokemons(search: {name:"${name}"includeEvolutions:false}) {name}}` }
-      if (name !== '') {
+      if (name) {
         this.vis = false
         this.listPokemon = []
         fetch('http://127.0.0.1:8000/api', {
@@ -48,7 +50,7 @@ export default {
           body: JSON.stringify(data)
         }).then((response) => response.json())
           .then((json) => {
-            if (!(json.data.searchPokemons.length === 1 && json.data.searchPokemons[0].name.toLowerCase() === name.toLowerCase())) {
+            if (json.data.searchPokemons !== null && !(json.data.searchPokemons.length === 1 && json.data.searchPokemons[0].name.toLowerCase() === name.toLowerCase())) {
               for (let i = 0; i <= json.data.searchPokemons.length - 1; i++) {
                 this.listPokemon.push(json.data.searchPokemons[i])
               }
@@ -82,7 +84,6 @@ export default {
   z-index: 2;
   background: #ffffff;
   position: absolute;
-  margin: 0 20%;
   border-radius: 10px;
   padding: 5px;
   box-shadow: 0 0 5px 3px rgba(123, 161, 160, 0.3);

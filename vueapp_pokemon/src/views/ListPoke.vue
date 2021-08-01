@@ -23,7 +23,7 @@
   </section>
   <section>
   <div class="resolve">
-    <router-link :to="{ name: 'Poknik', params: { Poknik: item.name }}" class="PokemonCart" v-for="item in PaginedPoke" :key="item">
+    <router-link :to="{ name: 'Poknik', params: { Poknik: item.id }}" class="PokemonCart" v-for="item in PaginedPoke" :key="item">
       <div class="id">{{ item.id }}</div>
       <div class="imya">{{ item.name }}</div>
       <img :src="require(`../../src/views/media/Pokemon/pokemon_icon_${('1000' + item.id).slice(-3)}_00.png`)" alt="">
@@ -50,6 +50,16 @@ export default {
       rarly: false,
       type_sort: '',
       cut_number: 0,
+      geners: [
+        'Канто (1)',
+        'Джото (2)',
+        'Хоэнн (3)',
+        'Синно (4)',
+        'Юнова (5)',
+        'Калос (6)',
+        'Алола (7)',
+        'Галар (8)'
+      ],
       Typi: [
         'Normal',
         'Fire',
