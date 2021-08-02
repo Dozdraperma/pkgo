@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from core.mutations.update_pokemons.domain.remote import PokemonBaseInfo
 from core.shared.domain.pokemon import Pokemon, Gender, Stage, Type
 from core.shared.service.pokemon import PokemonRepository
+from core.shared.actions.save import save_pokemons
 
 
 class PokemonGameinfo(PokemonRepository):
@@ -42,9 +43,9 @@ class PokemonGameinfo(PokemonRepository):
     @staticmethod
     def _clean_name(name: Optional[str]) -> Tuple[str, Optional[Gender]]:
         if '♀' in name:
-            return name.replace('♀', ''), Gender.FEMALE
+            return name, Gender.FEMALE
         if '♂' in name:
-            return name.replace('♂', ''), Gender.MALE
+            return name, Gender.MALE
         return name, None
 
     @classmethod
@@ -135,11 +136,10 @@ class PokemonGameinfo(PokemonRepository):
             for number, info in pokemon.items()
         ]
 
-        for pokemon in base_info:
-            print(self._get_pokemon(pokemon))
-            raise
-
         pokemons = [
             self._get_pokemon(pokemon)
             for pokemon in base_info
         ]
+
+        save_pokemons(pokemons)
+
