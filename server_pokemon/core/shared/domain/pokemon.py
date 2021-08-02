@@ -47,6 +47,7 @@ class Pokemon(BaseModel):
     primary_type: Type
     secondary_type: Optional[Type]
     stage: Stage
-    evolves_from: conint(gt=0)
-    evolve_gender: Gender
+    evolves_from: Optional[conint(gt=0)]
+    evolve_gender: Optional[Gender]
+    family_name: str
 
