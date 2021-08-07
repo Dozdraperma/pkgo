@@ -1,7 +1,6 @@
 import importlib
 import pkgutil
 from types import ModuleType
-from typing import Dict
 
 from ariadne import load_schema_from_path, make_executable_schema
 

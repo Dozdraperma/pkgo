@@ -1,12 +1,18 @@
 from django.core.management.base import BaseCommand
-from django.conf import settings
 
-from core.mutations.update_pokemons.services.remote_info import PokemonGameinfo
-from pokemon_base.pokedex_parser import pokedex_parser
+from core.mutations.update_pokemons.services.gohub import PokemonGOHub
 
 
 class Command(BaseCommand):
     help = 'Custom test'
 
+    #
+    # def add_arguments(self, parser: argparse.ArgumentParser):
+    #     parser.add_argument(
+    #         'identity',
+    #         nargs='+'
+    #     )
+
     def handle(self, *args, **options):
-        PokemonGameinfo().get_pokemons()
+        pok = PokemonGOHub().get_pokemon(386)
+        print(pok)
