@@ -126,5 +126,6 @@ type Pokemon {
     primaryType: PokemonType!
     secondaryType: PokemonType
     evolution: Evolution
+    description: String
     #    evolutionBranch: Branch!
 }

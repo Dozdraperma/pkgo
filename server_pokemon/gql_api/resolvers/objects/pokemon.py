@@ -62,6 +62,11 @@ def resolve_secondary_type(obj: Pokemon, info):
 def resolve_evolves_from(obj: Pokemon, info):
     return get_pokemon_evolutions(obj)
 
+
+@gqt.pokemon.field('description')
+def resolve_description(obj: Pokemon, info):
+    return obj.description
+
 # @gqt.pokemon.field('evolutionBranch')
 # def resolve_evolution_branch(obj: Pokemon, info):
 #     return {

@@ -21,6 +21,7 @@ def get_pokemon(number: int) -> Pokemon:
             gender=db_pokemon.evolve_gender
         ) if db_pokemon.evolves_from else None,
         family_name=db_pokemon.family_name,
+        description=db_pokemon.description,
     )
 
 
