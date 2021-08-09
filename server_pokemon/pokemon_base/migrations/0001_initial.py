@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -24,12 +23,25 @@ class Migration(migrations.Migration):
                 ('base_attack', models.PositiveSmallIntegerField()),
                 ('base_defense', models.PositiveSmallIntegerField()),
                 ('base_stamina', models.PositiveSmallIntegerField()),
-                ('primary_type', models.CharField(choices=[('NR', 'Normal'), ('FR', 'Fire'), ('WT', 'Water'), ('GS', 'Grass'), ('EL', 'Electric'), ('IC', 'Ice'), ('FT', 'Fighting'), ('PO', 'Poison'), ('GD', 'Ground'), ('FL', 'Flying'), ('PY', 'Psychic'), ('BG', 'Bug'), ('RK', 'Rock'), ('DK', 'Dark'), ('DG', 'Dragon'), ('ST', 'Steel'), ('FA', 'Fairy')], default='NR', max_length=100)),
-                ('secondary_type', models.CharField(blank=True, choices=[('NR', 'Normal'), ('FR', 'Fire'), ('WT', 'Water'), ('GS', 'Grass'), ('EL', 'Electric'), ('IC', 'Ice'), ('FT', 'Fighting'), ('PO', 'Poison'), ('GD', 'Ground'), ('FL', 'Flying'), ('PY', 'Psychic'), ('BG', 'Bug'), ('RK', 'Rock'), ('DK', 'Dark'), ('DG', 'Dragon'), ('ST', 'Steel'), ('FA', 'Fairy')], max_length=100)),
-                ('stage', models.PositiveSmallIntegerField(default=0, verbose_name=[(0, 'Unevolved'), (1, 'First'), (2, 'Second')])),
-                ('infancy_gender', models.CharField(choices=[('ML', 'Male'), ('FL', 'Female')], max_length=50, null=True)),
+                ('primary_type', models.CharField(
+                    choices=[('NR', 'Normal'), ('FR', 'Fire'), ('WT', 'Water'), ('GS', 'Grass'), ('EL', 'Electric'),
+                             ('IC', 'Ice'), ('FT', 'Fighting'), ('PO', 'Poison'), ('GD', 'Ground'), ('FL', 'Flying'),
+                             ('PY', 'Psychic'), ('BG', 'Bug'), ('RK', 'Rock'), ('DK', 'Dark'), ('DG', 'Dragon'),
+                             ('ST', 'Steel'), ('FA', 'Fairy')], default='NR', max_length=100)),
+                ('secondary_type', models.CharField(blank=True,
+                                                    choices=[('NR', 'Normal'), ('FR', 'Fire'), ('WT', 'Water'),
+                                                             ('GS', 'Grass'), ('EL', 'Electric'), ('IC', 'Ice'),
+                                                             ('FT', 'Fighting'), ('PO', 'Poison'), ('GD', 'Ground'),
+                                                             ('FL', 'Flying'), ('PY', 'Psychic'), ('BG', 'Bug'),
+                                                             ('RK', 'Rock'), ('DK', 'Dark'), ('DG', 'Dragon'),
+                                                             ('ST', 'Steel'), ('FA', 'Fairy')], max_length=100)),
+                ('stage', models.PositiveSmallIntegerField(default=0, verbose_name=[(0, 'Unevolved'), (1, 'First'),
+                                                                                    (2, 'Second')])),
+                ('infancy_gender',
+                 models.CharField(choices=[('ML', 'Male'), ('FL', 'Female')], max_length=50, null=True)),
                 ('variant', models.CharField(choices=[('AL', 'Alola'), ('GL', 'Galar')], max_length=50)),
-                ('infancy', models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, to='pokemon_base.regionalpokemon')),
+                ('infancy', models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                                 to='pokemon_base.regionalpokemon')),
             ],
             options={
                 'abstract': False,
@@ -47,12 +59,27 @@ class Migration(migrations.Migration):
                 ('base_attack', models.PositiveSmallIntegerField()),
                 ('base_defense', models.PositiveSmallIntegerField()),
                 ('base_stamina', models.PositiveSmallIntegerField()),
-                ('primary_type', models.CharField(choices=[('NR', 'Normal'), ('FR', 'Fire'), ('WT', 'Water'), ('GS', 'Grass'), ('EL', 'Electric'), ('IC', 'Ice'), ('FT', 'Fighting'), ('PO', 'Poison'), ('GD', 'Ground'), ('FL', 'Flying'), ('PY', 'Psychic'), ('BG', 'Bug'), ('RK', 'Rock'), ('DK', 'Dark'), ('DG', 'Dragon'), ('ST', 'Steel'), ('FA', 'Fairy')], default='NR', max_length=100)),
-                ('secondary_type', models.CharField(blank=True, choices=[('NR', 'Normal'), ('FR', 'Fire'), ('WT', 'Water'), ('GS', 'Grass'), ('EL', 'Electric'), ('IC', 'Ice'), ('FT', 'Fighting'), ('PO', 'Poison'), ('GD', 'Ground'), ('FL', 'Flying'), ('PY', 'Psychic'), ('BG', 'Bug'), ('RK', 'Rock'), ('DK', 'Dark'), ('DG', 'Dragon'), ('ST', 'Steel'), ('FA', 'Fairy')], max_length=100)),
-                ('stage', models.PositiveSmallIntegerField(default=0, verbose_name=[(0, 'Unevolved'), (1, 'First'), (2, 'Second')])),
-                ('infancy_gender', models.CharField(choices=[('ML', 'Male'), ('FL', 'Female')], max_length=50, null=True)),
-                ('infancy', models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, to='pokemon_base.pokemon')),
-                ('regional_variant', models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='+', to='pokemon_base.regionalpokemon')),
+                ('primary_type', models.CharField(
+                    choices=[('NR', 'Normal'), ('FR', 'Fire'), ('WT', 'Water'), ('GS', 'Grass'), ('EL', 'Electric'),
+                             ('IC', 'Ice'), ('FT', 'Fighting'), ('PO', 'Poison'), ('GD', 'Ground'), ('FL', 'Flying'),
+                             ('PY', 'Psychic'), ('BG', 'Bug'), ('RK', 'Rock'), ('DK', 'Dark'), ('DG', 'Dragon'),
+                             ('ST', 'Steel'), ('FA', 'Fairy')], default='NR', max_length=100)),
+                ('secondary_type', models.CharField(blank=True,
+                                                    choices=[('NR', 'Normal'), ('FR', 'Fire'), ('WT', 'Water'),
+                                                             ('GS', 'Grass'), ('EL', 'Electric'), ('IC', 'Ice'),
+                                                             ('FT', 'Fighting'), ('PO', 'Poison'), ('GD', 'Ground'),
+                                                             ('FL', 'Flying'), ('PY', 'Psychic'), ('BG', 'Bug'),
+                                                             ('RK', 'Rock'), ('DK', 'Dark'), ('DG', 'Dragon'),
+                                                             ('ST', 'Steel'), ('FA', 'Fairy')], max_length=100)),
+                ('stage', models.PositiveSmallIntegerField(default=0, verbose_name=[(0, 'Unevolved'), (1, 'First'),
+                                                                                    (2, 'Second')])),
+                ('infancy_gender',
+                 models.CharField(choices=[('ML', 'Male'), ('FL', 'Female')], max_length=50, null=True)),
+                ('infancy', models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                                 to='pokemon_base.pokemon')),
+                ('regional_variant',
+                 models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='+',
+                                      to='pokemon_base.regionalpokemon')),
             ],
             options={
                 'abstract': False,

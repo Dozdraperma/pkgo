@@ -1,23 +1,60 @@
 type Query {
     hello: String!
+    """
+    Получение покемона по ID
+    """
     getPokemon(id: ID!): Pokemon!
-    getPokemons(sort: SortingInput): [Pokemon!]!
-    searchPokemons(search: SearchInput): [Pokemon]
+    """
+    Получение покемонов по критериям, без критериев возвращает список всех покемонов
+    """
+    getPokemons(input: GetPokemonsInput): [Pokemon!]!
 }
+
+input GetPokemonsInput {
+    """
+    Сортировка
+    """
+    sort: [Field],
+    """
+    Фильтрация
+    """
+    filter: FilterInput,
+    """
+    Поиск
+    """
+    search: SearchInput
+}
+
+input FilterInput {
+    name: String
+    type: PokemonType
+    stats: StatInput
+}
+
+input StatInput {
+    maxCP: Int
+    baseAttack: Int
+    baseDefense: Int
+    baseStamina: Int
+    mode: FiltrationMode
+}
+
+enum FiltrationMode {
+    """
+    Режим выборки значений =, < или >
+    """
+    EQUALS
+    LESS_THAN
+    GREATER_THAN
+}
+
 
 input SearchInput {
-    id: ID
     name: String!
-    type: PokemonType
-    sort: SortingInput
-    includeEvolutions: Boolean!
 }
 
-input SortingInput {
-    sortBy: [Sorting!]!
-}
 
-enum Sorting {
+enum Field {
     id
     name
     height
@@ -53,6 +90,29 @@ enum PokemonType {
     Fairy
 }
 
+enum Gender {
+    MALE
+    FEMALE
+}
+
+type Evolution {
+    from: Pokemon
+    to: [Pokemon]!
+    """
+    Пол покемона из поля from, требуемый для эволюции
+    """
+    gender: Gender
+}
+
+type EvolutionStage {
+    stageCount: Int!
+    pokemons: [Pokemon!]!
+}
+
+type Branch {
+    stages: EvolutionStage!
+}
+
 type Pokemon {
     id: ID!
     name: String!
@@ -65,8 +125,7 @@ type Pokemon {
     baseStamina: Int!
     primaryType: PokemonType!
     secondaryType: PokemonType
-    evolutionStage: Int!
-    evolvesFrom: Pokemon
-    evolvesTo: [Pokemon]
-    evolveGender: String!
+    evolution: Evolution
+    description: String
+    #    evolutionBranch: Branch!
 }

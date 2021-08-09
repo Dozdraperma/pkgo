@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from pokemon_base.models import Pokemon
 
 
@@ -19,7 +20,7 @@ class PokemonAdmin(admin.ModelAdmin):
     )
     list_display = ('id', 'name', 'get_primary_type', 'get_secondary_type', 'get_evolves_from')
     list_display_links = ('id', 'name')
-    ordering = ('id', )
+    ordering = ('id',)
 
     def get_readonly_fields(self, request, obj=None):
         # make all fields readonly
@@ -44,4 +45,3 @@ class PokemonAdmin(admin.ModelAdmin):
     get_primary_type.short_description = 'Primary type'
     get_secondary_type.short_description = 'Secondary type'
     get_evolves_from.short_description = 'Evolves from'
-

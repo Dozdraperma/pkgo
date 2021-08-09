@@ -25,11 +25,6 @@ class Pokemon(models.Model):
         DARK = 'DK', 'Dark'
         FAIRY = 'FA', 'Fairy'
 
-    class Stage(models.IntegerChoices):
-        UNEVOLVED = 0
-        FIRST = 1
-        SECOND = 2
-
     class InfancyGender(models.TextChoices):
         MALE = 'ML', 'Male'
         FEMALE = 'FL', 'Female'
@@ -45,8 +40,6 @@ class Pokemon(models.Model):
     base_stamina = models.PositiveSmallIntegerField()
     primary_type = models.CharField(choices=Type.choices, default=Type.NORMAL, max_length=100)
     secondary_type = models.CharField(choices=Type.choices, blank=True, max_length=100)
-    stage = models.PositiveSmallIntegerField(Stage.choices, default=Stage.UNEVOLVED)
     evolves_from = models.ForeignKey('self', on_delete=models.DO_NOTHING, related_name='evolves_to', null=True)
     evolve_gender = models.CharField(choices=InfancyGender.choices, null=True, max_length=50)
-
-
+    description = models.TextField(max_length=500, blank=True)

@@ -1,10 +1,11 @@
 import gql_api.gql_api_types as gqt
-from pokemon_base.models import Pokemon
+from core.queries.evolution import get_pokemon_evolutions
+from core.shared.domain.pokemon import Pokemon
 
 
 @gqt.pokemon.field('id')
 def resolve_id(obj: Pokemon, info):
-    return obj.id
+    return obj.number
 
 
 @gqt.pokemon.field('name')
@@ -49,29 +50,33 @@ def resolve_base_stamina(obj: Pokemon, info):
 
 @gqt.pokemon.field('primaryType')
 def resolve_primary_type(obj: Pokemon, info):
-    return obj.primary_type
+    return obj.primary_type.value
 
 
 @gqt.pokemon.field('secondaryType')
 def resolve_secondary_type(obj: Pokemon, info):
-    return obj.secondary_type or None
+    return obj.secondary_type.value if obj.secondary_type else None
 
 
-@gqt.pokemon.field('evolutionStage')
-def resolve_evolution_stage(obj: Pokemon, info):
-    return obj.stage
-
-
-@gqt.pokemon.field('evolvesFrom')
+@gqt.pokemon.field('evolution')
 def resolve_evolves_from(obj: Pokemon, info):
-    return obj.evolves_from
+    return get_pokemon_evolutions(obj)
 
 
-@gqt.pokemon.field('evolveGender')
-def resolve_evolve_gender(obj: Pokemon, info):
-    return obj.evolve_gender
+@gqt.pokemon.field('description')
+def resolve_description(obj: Pokemon, info):
+    return obj.description
 
-
-@gqt.pokemon.field('evolvesTo')
-def resolve_evolves_to(obj: Pokemon, info):
-    return obj.evolves_to.all()
+# @gqt.pokemon.field('evolutionBranch')
+# def resolve_evolution_branch(obj: Pokemon, info):
+#     return {
+#         '__typename': 'Branch',
+#         'stages': [
+#             {
+#                 '__typename': 'EvolutionStage',
+#                 'stageCount': stage.stage_count,
+#                 'pokemons': stage.pokemons
+#             }
+#             for stage in get_evolution_branch(obj).stages
+#         ]
+#     }

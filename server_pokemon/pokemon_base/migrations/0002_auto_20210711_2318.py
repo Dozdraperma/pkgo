@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('pokemon_base', '0001_initial'),
     ]
@@ -23,10 +22,22 @@ class Migration(migrations.Migration):
                 ('base_attack', models.PositiveSmallIntegerField()),
                 ('base_defense', models.PositiveSmallIntegerField()),
                 ('base_stamina', models.PositiveSmallIntegerField()),
-                ('primary_type', models.CharField(choices=[('NR', 'Normal'), ('FR', 'Fire'), ('WT', 'Water'), ('GS', 'Grass'), ('EL', 'Electric'), ('IC', 'Ice'), ('FT', 'Fighting'), ('PO', 'Poison'), ('GD', 'Ground'), ('FL', 'Flying'), ('PY', 'Psychic'), ('BG', 'Bug'), ('RK', 'Rock'), ('DK', 'Dark'), ('DG', 'Dragon'), ('ST', 'Steel'), ('FA', 'Fairy')], default='NR', max_length=100)),
-                ('secondary_type', models.CharField(blank=True, choices=[('NR', 'Normal'), ('FR', 'Fire'), ('WT', 'Water'), ('GS', 'Grass'), ('EL', 'Electric'), ('IC', 'Ice'), ('FT', 'Fighting'), ('PO', 'Poison'), ('GD', 'Ground'), ('FL', 'Flying'), ('PY', 'Psychic'), ('BG', 'Bug'), ('RK', 'Rock'), ('DK', 'Dark'), ('DG', 'Dragon'), ('ST', 'Steel'), ('FA', 'Fairy')], max_length=100)),
-                ('stage', models.PositiveSmallIntegerField(default=0, verbose_name=[(0, 'Unevolved'), (1, 'First'), (2, 'Second')])),
-                ('infancy_gender', models.CharField(choices=[('ML', 'Male'), ('FL', 'Female')], max_length=50, null=True)),
+                ('primary_type', models.CharField(
+                    choices=[('NR', 'Normal'), ('FR', 'Fire'), ('WT', 'Water'), ('GS', 'Grass'), ('EL', 'Electric'),
+                             ('IC', 'Ice'), ('FT', 'Fighting'), ('PO', 'Poison'), ('GD', 'Ground'), ('FL', 'Flying'),
+                             ('PY', 'Psychic'), ('BG', 'Bug'), ('RK', 'Rock'), ('DK', 'Dark'), ('DG', 'Dragon'),
+                             ('ST', 'Steel'), ('FA', 'Fairy')], default='NR', max_length=100)),
+                ('secondary_type', models.CharField(blank=True,
+                                                    choices=[('NR', 'Normal'), ('FR', 'Fire'), ('WT', 'Water'),
+                                                             ('GS', 'Grass'), ('EL', 'Electric'), ('IC', 'Ice'),
+                                                             ('FT', 'Fighting'), ('PO', 'Poison'), ('GD', 'Ground'),
+                                                             ('FL', 'Flying'), ('PY', 'Psychic'), ('BG', 'Bug'),
+                                                             ('RK', 'Rock'), ('DK', 'Dark'), ('DG', 'Dragon'),
+                                                             ('ST', 'Steel'), ('FA', 'Fairy')], max_length=100)),
+                ('stage', models.PositiveSmallIntegerField(default=0, verbose_name=[(0, 'Unevolved'), (1, 'First'),
+                                                                                    (2, 'Second')])),
+                ('infancy_gender',
+                 models.CharField(choices=[('ML', 'Male'), ('FL', 'Female')], max_length=50, null=True)),
             ],
             options={
                 'abstract': False,
