@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Iterable
 
 from core.shared.domain.pokemon import Pokemon, PokemonBaseInfo, Evolution
 
@@ -16,4 +16,8 @@ class PokemonRepository(ABC):
 
     @abstractmethod
     def get_evolution(self, name) -> Evolution:
+        pass
+
+    @abstractmethod
+    def get_pokemons(self) -> Iterable[Pokemon]:
         pass

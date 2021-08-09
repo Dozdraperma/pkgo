@@ -1,8 +1,10 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, Set, List
 
 import requests
+from pydantic import ValidationError
 
 from core.shared.domain.pokemon import Pokemon, Type, PokemonBaseInfo, Evolution, Gender
+from core.shared.service.log import logger
 from core.shared.service.pokemon import PokemonRepository
 
 
@@ -19,9 +21,6 @@ class PokemonGOHub(PokemonRepository):
         "Sec-Fetch-Site": "same-origin"
     }
 
-    def __init__(self):
-        self.evolutions = {}
-
     def get_pokemon_list_by_generation(self, generation: int):
         request = requests.get(
             url=f'{self.REMOTE_ROOT_URL}/api/pokemon/with-generation/{generation}?locale=en-US',
@@ -35,18 +34,21 @@ class PokemonGOHub(PokemonRepository):
         for gen in range(1, self.GENERATIONS + 1):
             pokemons += self.get_pokemon_list_by_generation(gen)
 
-        return [
+        return {
             PokemonBaseInfo(number=pokemon['id'], name=pokemon['name'])
             for pokemon in pokemons
-        ]
+        }
 
-    def get_evolution(self, name: str) -> Optional[Evolution]:
-        for evolution in self.evolutions.get(name, []):
+    def get_evolution(self, name: str, raw_evolutions: List[Dict]) -> Optional[Evolution]:
+        if not raw_evolutions:
+            return
+
+        for evolution in raw_evolutions:
             if evolution['evolutionName'] == name:
                 return Evolution(
                     id=evolution['pokemonPokedexId'],
                     name=evolution['pokemonName'],
-                    gender=evolution['genderRequirement'] and Gender(evolution['genderRequirement'])
+                    gender=evolution['genderRequirement'] and Gender(evolution['genderRequirement'].title())
                 )
 
     def _get_raw_pokemon(self, number: int, form='') -> Optional[Dict]:
@@ -57,26 +59,43 @@ class PokemonGOHub(PokemonRepository):
 
         return request.json()
 
-    def get_pokemon(self, number: int) -> Pokemon:
+    def get_pokemon(self, number: int) -> Optional[Pokemon]:
         raw = self._get_raw_pokemon(number)
         if raw is None:
             raw = self._get_raw_pokemon(number, form='Normal')
+        if raw is None:
+            return
 
-        self.evolutions[raw['name']] = raw.get('evolutionLine', [])
+        logger.info(f'Processing {raw["name"]}')
 
-        return Pokemon(
-            number=raw['id'],
-            name=raw['name'],
-            height=raw['height'],
-            weight=raw['weight'],
-            max_cp=raw['maxcp'],
-            base_attack=raw['atk'],
-            base_defense=raw['def'],
-            base_stamina=raw['sta'],
-            primary_type=Type(raw['type1'].title()),
-            secondary_type=raw['type2'] and Type(raw['type2'].title()),
-            evolves_from=None,
-            description=raw['description'],
-            family_name=raw['family'][0]['name'] if raw['family'] else raw['name'],
-            generation=raw['generation']
-        )
+        try:
+            return Pokemon(
+                number=raw['id'],
+                name=raw['name'],
+                height=raw['height'],
+                weight=raw['weight'],
+                max_cp=raw['maxcp'],
+                base_attack=raw['atk'],
+                base_defense=raw['def'],
+                base_stamina=raw['sta'],
+                primary_type=Type(raw['type1'].title()),
+                secondary_type=raw['type2'] and Type(raw['type2'].title()),
+                evolves_from=self.get_evolution(raw['name'], raw['evolutionLine']),
+                description=raw['description'],
+                family_name=raw['family'][0]['name'] if raw['family'] else raw['name']
+            )
+        except ValidationError as err:
+            failures = {
+                error['loc'][0]
+                for error in err.errors()
+            }
+            logger.info(f'Validation failed: {failures}')
+
+    def get_pokemons(self) -> Set[Pokemon]:
+        pokemons = {
+            self.get_pokemon(pokemon.number)
+            for pokemon in self.get_pokemon_list()
+        }
+        pokemons = {x for x in pokemons if x is not None}
+
+        return pokemons

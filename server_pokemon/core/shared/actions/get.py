@@ -1,5 +1,5 @@
 import pokemon_base.models as db
-from core.shared.domain.pokemon import Pokemon, Type, Stage, Evolution
+from core.shared.domain.pokemon import Pokemon, Type, Evolution
 
 
 def get_pokemon(number: int) -> Pokemon:

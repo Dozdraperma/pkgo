@@ -41,6 +41,9 @@ class Evolution(BaseModel):
     name: str
     gender: Optional[Gender]
 
+    class Config:
+        frozen = True
+
 
 class Pokemon(BaseModel):
     number: conint(gt=0, lt=1000)
@@ -57,7 +60,13 @@ class Pokemon(BaseModel):
     family_name: str
     description: Optional[str]
 
+    class Config:
+        frozen = True
+
 
 class PokemonBaseInfo(BaseModel):
     number: conint(gt=0)
     name: str
+
+    class Config:
+        frozen = True
