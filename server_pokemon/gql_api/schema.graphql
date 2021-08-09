@@ -1,12 +1,27 @@
 type Query {
     hello: String!
+    """
+    Получение покемона по ID
+    """
     getPokemon(id: ID!): Pokemon!
+    """
+    Получение покемонов по критериям, без критериев возвращает список всех покемонов
+    """
     getPokemons(input: GetPokemonsInput): [Pokemon!]!
 }
 
 input GetPokemonsInput {
+    """
+    Сортировка
+    """
     sort: [Field],
+    """
+    Фильтрация
+    """
     filter: FilterInput,
+    """
+    Поиск
+    """
     search: SearchInput
 }
 
@@ -25,6 +40,9 @@ input StatInput {
 }
 
 enum FiltrationMode {
+    """
+    Режим выборки значений =, < или >
+    """
     EQUALS
     LESS_THAN
     GREATER_THAN
@@ -33,7 +51,6 @@ enum FiltrationMode {
 
 input SearchInput {
     name: String!
-    includeEvolutions: Boolean!
 }
 
 
@@ -81,6 +98,9 @@ enum Gender {
 type Evolution {
     from: Pokemon
     to: [Pokemon]!
+    """
+    Пол покемона из поля from, требуемый для эволюции
+    """
     gender: Gender
 }
 
