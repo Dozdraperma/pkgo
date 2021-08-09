@@ -5,5 +5,6 @@ from ariadne import (
 
 types = [
     query := QueryType(),
-    pokemon := ObjectType('Pokemon')
+    pokemon := ObjectType('Pokemon'),
+    evolution := ObjectType('Evolution')
 ]

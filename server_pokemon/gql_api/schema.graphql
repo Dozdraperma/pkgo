@@ -1,23 +1,43 @@
 type Query {
     hello: String!
     getPokemon(id: ID!): Pokemon!
-    getPokemons(sort: SortingInput): [Pokemon!]!
-    searchPokemons(search: SearchInput): [Pokemon]
+    getPokemons(input: GetPokemonsInput): [Pokemon!]!
 }
 
-input SearchInput {
-    id: ID
-    name: String!
+input GetPokemonsInput {
+    sort: [Field],
+    filter: FilterInput,
+    search: SearchInput
+}
+
+input FilterInput {
+    name: String
     type: PokemonType
-    sort: SortingInput
+    stats: StatInput
+}
+
+input StatInput {
+    maxCP: Int
+    baseAttack: Int
+    baseDefense: Int
+    baseStamina: Int
+    mode: FiltrationMode
+}
+
+enum FiltrationMode {
+    EQUALS
+    LESS_THAN
+    GREATER_THAN
+}
+
+
+input SearchInput {
+    name: String!
     includeEvolutions: Boolean!
 }
 
-input SortingInput {
-    sortBy: [Sorting!]!
-}
 
-enum Sorting {
+enum Field {
     id
     name
     height
@@ -53,6 +73,26 @@ enum PokemonType {
     Fairy
 }
 
+enum Gender {
+    MALE
+    FEMALE
+}
+
+type Evolution {
+    from: Pokemon
+    to: [Pokemon]!
+    gender: Gender
+}
+
+type EvolutionStage {
+    stageCount: Int!
+    pokemons: [Pokemon!]!
+}
+
+type Branch {
+    stages: EvolutionStage!
+}
+
 type Pokemon {
     id: ID!
     name: String!
@@ -65,8 +105,6 @@ type Pokemon {
     baseStamina: Int!
     primaryType: PokemonType!
     secondaryType: PokemonType
-    evolutionStage: Int!
-    evolvesFrom: Pokemon
-    evolvesTo: [Pokemon]
-    evolveGender: String!
+    evolution: Evolution
+    #    evolutionBranch: Branch!
 }
