@@ -1,20 +1,20 @@
 <template>
   <div class="contan">
-  <div class="PokemonMenu"
-       v-bind:style="{ visibility: isVisibl } "
-  >
-    <form @submit.prevent="onSubmit">
-      <input type="text" placeholder="Имя" v-model="name" >
-      <div class="wrappy">
-        <div class="search" v-show="vis">
-          <button  @click="ekanS (item.name)" v-for="item in listPokemon" :key="item">{{ item.name }}</button>
+    <div class="PokemonMenu"
+         v-bind:style="{ visibility: isVisibl } "
+    >
+      <form @submit.prevent="onSubmit">
+        <input type="text" placeholder="Имя" v-model="name" >
+        <div class="wrappy">
+          <div class="search" v-show="vis">
+            <button  @click="ekanS (item.name)" v-for="item in listPokemon" :key="item">{{ item.name }}</button>
+          </div>
         </div>
-      </div>
-      <input type="text" placeholder="СР" maxlength="4" v-model="sp">
-      <br>
-      <button type="submit">ДОБАВИТЬ</button>
-    </form>
-  </div>
+        <input type="text" placeholder="СР" maxlength="4" v-model="sp">
+        <br>
+        <button type="submit">ДОБАВИТЬ</button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -87,18 +87,16 @@ export default {
   padding: 5px;
   box-shadow: 0 0 5px 3px rgba(123, 161, 160, 0.3);
   width: 100%;
-
-form input {
-  font-family: "Montserrat", "Helvetica", "Roboto", sans-serif;
-  border-radius: 20px;
-  border: none;
-  background: #d7ecef;
-  padding: 7px;
-  text-align: center;
-  margin: 5px 0;
-  width: 70%;
-
-}
+  form input {
+    font-family: "Montserrat", "Helvetica", "Roboto", sans-serif;
+    border-radius: 20px;
+    border: none;
+    background: #d7ecef;
+    padding: 7px;
+    text-align: center;
+    margin: 5px 0;
+    width: 70%;
+  }
   form {
     .wrappy {
       display: flex;
@@ -116,15 +114,15 @@ form input {
       }
     }
   }
-button {
-  font-family: 'Encode Sans SC', "Helvetica", "Roboto", sans-serif;
-  padding: 4px 9px;
-  margin-top: 5px;
-  font-weight: 600;
-  background-color: #38a6eb;
-  color: #2c3e50;
-  border: 0;
-  border-radius: 15px;
-}
+  button {
+    font-family: 'Encode Sans SC', "Helvetica", "Roboto", sans-serif;
+    padding: 4px 9px;
+    margin-top: 5px;
+    font-weight: 600;
+    background-color: #38a6eb;
+    color: #2c3e50;
+    border: 0;
+    border-radius: 15px;
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-<div class="PokemonSlot" >
+  <div class="PokemonSlot" >
     <div class="remove"
          v-bind:style="{visibility: isVisibleinfo}"
          @click="onRemove"></div>
@@ -7,9 +7,9 @@
     <button v-on:click="openMenu">
     </button>
     <p id="name" v-bind:style="{visibility: isVisibleinfo}">|{{ Pokemon.name }}|</p>
-  <PokeMenu v-bind:isVisibl="isVisible"
-            v-on:onsubmit="onSubmit"
-  />
+    <PokeMenu v-bind:isVisibl="isVisible"
+              v-on:onsubmit="onSubmit"
+    />
   </div>
 </template>
 
@@ -54,7 +54,6 @@ export default {
     margin: 7px;
     font-size: 10px;
     font-weight: bold;
-
     span {
       font-size: 20px;
     }
@@ -64,7 +63,6 @@ export default {
     font-size: 15px;
     font-weight: bold;
   }
-
   button {
     border-radius: 10px;
     box-shadow: 0 0 5px 3px rgba(123, 161, 160, 0.2);
@@ -72,12 +70,10 @@ export default {
     border: 2px solid #bad7db;
     background: linear-gradient(90deg, #ffffff, #f7fdf3);
   }
-
   button:hover {
     box-shadow: 0 0 5px 7px rgba(123, 161, 160, 0.8);
     transition-duration: 200ms;
   }
-
   .remove {
     opacity: 0;
     z-index: 4;

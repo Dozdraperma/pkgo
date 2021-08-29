@@ -1,23 +1,10 @@
-import { createApp } from 'vue'
+import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import { createProvider } from './vue-apollo'
 
-createApp(App).use(router).mount('#app')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
-module.exports = {
-  // другие настройки...
-  module: {
-    rules: [
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        options: {
-          extractCSS: true
-        }
-      }
-    ]
-  },
-  plugins: [
-    new ExtractTextPlugin('style.css')
-  ]
-}
+new Vue({
+  router,
+  apolloProvider: createProvider(),
+  render: h => h(App)
+}).$mount('#app')
