@@ -21,5 +21,6 @@ def resolve_pokemons(obj, info, input):
     return get_pokemons(
         sort_input=input.get('sort'),
         filter_input=input.get('filter'),
-        search_input=input.get('search')
+        search_input=input.get('search'),
+        pagination_input=input.get('pagination'),
     )

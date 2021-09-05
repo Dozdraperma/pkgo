@@ -1,13 +1,11 @@
 <template>
   <div class="contan">
-    <div class="PokemonMenu"
-         v-bind:style="{ visibility: isVisibl } "
-    >
+    <div class="PokemonMenu" v-bind:style="{ visibility: isVisibl }">
       <form @submit.prevent="onSubmit">
         <input type="text" placeholder="Имя" v-model="name" >
         <div class="wrappy">
-          <div class="search" v-show="vis">
-            <button  @click="ekanS (item.name)" v-for="item in listPokemon" :key="item">{{ item.name }}</button>
+          <div class="search" v-if="name && listPokemon.length !== 0 && name.toUpperCase() !== listPokemon[0].name.toUpperCase()">
+            <button  @click="ekanS (item)" v-for="item in listPokemon" :key="item.name">{{ item.name }}</button>
           </div>
         </div>
         <input type="text" placeholder="СР" maxlength="4" v-model="sp">
@@ -19,12 +17,32 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+
+const QueryName = gql`query($trname: String){ getPokemons(input: {filter: {name: $trname}}) {name} }`
+
 export default {
   props: ['isVisibl'],
   name: 'PokeMenu',
+  apollo: {
+    namecorr: {
+      query: QueryName,
+      variables () {
+        return {
+          trname: this.name
+        }
+      },
+      skip () {
+        return this.skipQuery
+      },
+      debounce: 500,
+      update: data => data.namecorr,
+      result (data) { this.listPokemon = data.data.getPokemons }
+    }
+  },
   methods: {
     ekanS (item) {
-      this.name = item
+      this.name = item.name
     },
     onSubmit () {
       this.$emit('onsubmit', {
@@ -34,28 +52,8 @@ export default {
     }
   },
   watch: {
-    name: function (name) {
-      const data = { query: `{searchPokemons(search: {name:"${name}"includeEvolutions:false}) {name}}` }
-      if (name !== '') {
-        this.vis = false
-        this.listPokemon = []
-        fetch('http://127.0.0.1:8000/api', {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
-        }).then((response) => response.json())
-          .then((json) => {
-            if (!(json.data.searchPokemons.length === 1 && json.data.searchPokemons[0].name.toLowerCase() === name.toLowerCase())) {
-              for (let i = 0; i <= json.data.searchPokemons.length - 1; i++) {
-                this.listPokemon.push(json.data.searchPokemons[i])
-              }
-              this.vis = true
-            }
-          })
-      } else { this.listPokemon = []; this.vis = false }
+    name: function (val) {
+      val ? this.$apollo.queries.namecorr.skip = false : this.$apollo.queries.namecorr.skip = true
     }
   },
   data () {
@@ -63,8 +61,7 @@ export default {
       Pokemon: { id: '', name: '', cp: '' },
       sp: '',
       name: '',
-      listPokemon: [],
-      vis: false
+      listPokemon: []
     }
   }
 }

@@ -23,7 +23,7 @@
   </section>
   <section>
   <div class="resolve">
-    <router-link :to="{ name: 'Poknik', params: { Poknik: item.id }}" class="PokemonCart" v-for="item in PaginedPoke" :key="item">
+    <router-link :to="{ name: 'Poknik', params: { Poknik: item.id }}" class="PokemonCart" v-for="item in listPokemon" :key="item.id">
       <div class="id">{{ item.id }}</div>
       <div class="imya">{{ item.name }}</div>
       <img :src="require(`../../src/views/media/Pokemon/pokemon_icon_${('1000' + item.id).slice(-3)}_00.png`)" alt="">
@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+
 export default {
   name: 'ListPoke',
   data () {
@@ -49,7 +51,7 @@ export default {
       legen: false,
       rarly: false,
       type_sort: '',
-      cut_number: 0,
+      offset: 0,
       geners: [
         'Канто (1)',
         'Джото (2)',
@@ -82,6 +84,21 @@ export default {
       ]
     }
   },
+  apollo: {
+    FetchListPoke: {
+      query: gql`query($offset: Int!, $limit: Int!){getPokemons(input: {pagination: {offset: $offset limit: $limit}}) {id, name, primaryType, secondaryType, maxCP}}`,
+      variables () {
+        return {
+          offset: this.offset,
+          limit: 15
+        }
+      },
+      update: data => data.listPokemon,
+      result (data) {
+        this.listPokemon = this.listPokemon.concat(data.data.getPokemons)
+      }
+    }
+  },
   methods: {
     swap (type, index) {
       if (this.type_sort === type) {
@@ -95,46 +112,14 @@ export default {
         document.querySelector('.listtype').children[index].classList.add('active')
       }
     },
-    next_cut () {
-      this.cut_number++
-    },
     Kebov () {
       if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 50) {
-        this.next_cut()
+        this.offset += 15
       }
     }
   },
-  computed: {
-    FilteredPoke: function () {
-      const m = this.InputName
-      const t = this.type_sort
-      return this.listPokemon.filter(function (elem) {
-        if (elem.name.toLowerCase().indexOf(m.toLowerCase()) > -1) {
-          if (t !== '') {
-            if (elem.secondaryType === t || elem.primaryType === t) return elem
-          } else return elem
-        }
-      })
-    },
-    PaginedPoke: function () {
-      const end = this.cut_number * 12 + 12
-      return this.FilteredPoke.slice(0, end)
-    }
-  },
+
   created () {
-    fetch('http://127.0.0.1:8000/api', {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ query: '{searchPokemons(search: {name:""includeEvolutions:false}) {name, id, primaryType, secondaryType, maxCP}}' })
-    }).then((response) => response.json())
-      .then((json) => {
-        for (let i = 0; i <= json.data.searchPokemons.length - 1; i++) {
-          this.listPokemon.push(json.data.searchPokemons[i])
-        }
-      })
     window.addEventListener('scroll', this.Kebov)
   },
   unmounted () {

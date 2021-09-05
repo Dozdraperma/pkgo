@@ -35,6 +35,7 @@ def get_pokemons(
         sort_input: List[str],
         filter_input: Dict,
         search_input: Dict,
+        pagination_input: Dict,
 ) -> List[Pokemon]:
     query = db.Pokemon.objects.all()
     if filter_input is not None:
@@ -47,6 +48,9 @@ def get_pokemons(
 
     if sort_input is not None:
         query = query.order_by(*sort_input)
+
+    if pagination_input is not None:
+        query = query[pagination_input['offset']:pagination_input['offset'] + pagination_input['limit']]
 
     return [
         convert_pokemon(pokemon)

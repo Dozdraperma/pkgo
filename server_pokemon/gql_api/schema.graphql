@@ -23,6 +23,10 @@ input GetPokemonsInput {
     Поиск
     """
     search: SearchInput
+    """
+    Пагинация
+    """
+    pagination: PaginationInput
 }
 
 input FilterInput {
@@ -37,6 +41,14 @@ input StatInput {
     baseDefense: Int
     baseStamina: Int
     mode: FiltrationMode
+}
+
+"""
+Срез результата от {offset} до {offset + limit}
+"""
+input PaginationInput {
+    offset: Int
+    limit: Int
 }
 
 enum FiltrationMode {
