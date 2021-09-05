@@ -28,7 +28,7 @@ class FilterInput(BaseModel):
         constr(
             strip_whitespace=True,
             to_lower=True,
-            min_length=3,
+            min_length=1,
             max_length=30,
         )
     ]
@@ -43,10 +43,9 @@ class SearchInput(BaseModel):
     name: constr(
         strip_whitespace=True,
         to_lower=True,
-        min_length=3,
+        min_length=1,
         max_length=30,
     )
-    include_evolutions: bool
 
     class Config:
         frozen = True
