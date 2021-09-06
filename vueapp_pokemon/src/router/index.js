@@ -26,7 +26,7 @@ const routes = [
     component: () => import('../views/ListPoke.vue')
   },
   {
-    path: '/ListPoke/:Poknik',
+    path: 'ListPoke/:Poknik',
     name: 'Poknik',
     component: () => import('../views/Poknik.vue')
   }

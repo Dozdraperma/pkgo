@@ -1,11 +1,11 @@
 <template>
-  <div class="contan">
-    <div class="PokemonMenu" v-bind:style="{ visibility: isVisibl }">
+  <div class="Container">
+    <div class="PokemonMenu" v-bind:style="{ visibility: MenuVisible }">
       <form @submit.prevent="onSubmit">
         <input type="text" placeholder="Имя" v-model="name" >
         <div class="wrappy">
           <div class="search" v-if="name && listPokemon.length !== 0 && name.toUpperCase() !== listPokemon[0].name.toUpperCase()">
-            <button  @click="ekanS (item)" v-for="item in listPokemon" :key="item.name">{{ item.name }}</button>
+            <button  @click="ekanS (Pokemon)" v-for="Pokemon in listPokemon" :key="Pokemon.name">{{ Pokemon.name }}</button>
           </div>
         </div>
         <input type="text" placeholder="СР" maxlength="4" v-model="sp">
@@ -19,24 +19,24 @@
 <script>
 import gql from 'graphql-tag'
 
-const QueryName = gql`query($trname: String){ getPokemons(input: {filter: {name: $trname}}) {name} }`
+const QueryName = gql`query($name: String){ getPokemons(input: {filter: {name: $name}}) {name} }`
 
 export default {
-  props: ['isVisibl'],
+  props: ['MenuVisible'],
   name: 'PokeMenu',
   apollo: {
-    namecorr: {
+    NameHint: {
       query: QueryName,
       variables () {
         return {
-          trname: this.name
+          name: this.name
         }
       },
       skip () {
         return this.skipQuery
       },
       debounce: 500,
-      update: data => data.namecorr,
+      update: data => data.NameHint,
       result (data) { this.listPokemon = data.data.getPokemons }
     }
   },
@@ -52,8 +52,8 @@ export default {
     }
   },
   watch: {
-    name: function (val) {
-      val ? this.$apollo.queries.namecorr.skip = false : this.$apollo.queries.namecorr.skip = true
+    name: function (name) {
+      name ? this.$apollo.queries.NameHint.skip = false : this.$apollo.queries.NameHint.skip = true
     }
   },
   data () {
@@ -68,7 +68,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.contan{
+.Container{
   display: flex;
   justify-content: center;
   position: relative;

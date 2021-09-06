@@ -1,13 +1,13 @@
 <template>
   <div class="PokemonSlot" >
     <div class="remove"
-         v-bind:style="{visibility: isVisibleinfo}"
+         v-bind:style="{visibility: isVisibleInfo}"
          @click="onRemove"></div>
-    <p v-bind:style="{visibility: isVisibleinfo}">CP <span>{{ Pokemon.cp }}</span></p>
+    <p v-bind:style="{visibility: isVisibleInfo}">CP <span>{{ Pokemon.cp }}</span></p>
     <button v-on:click="openMenu">
     </button>
-    <p id="name" v-bind:style="{visibility: isVisibleinfo}">|{{ Pokemon.name }}|</p>
-    <PokeMenu v-bind:isVisibl="isVisible"
+    <p id="name" v-bind:style="{visibility: isVisibleInfo}">|{{ Pokemon.name }}|</p>
+    <PokeMenu v-bind:MenuVisible="isVisible"
               v-on:onsubmit="onSubmit"
     />
   </div>
@@ -26,20 +26,20 @@ export default {
       this.Pokemon.id = Date.now()
       this.Pokemon.name = ab.name
       this.Pokemon.cp = ab.sp
-      this.isVisibleinfo = 'visible'
+      this.isVisibleInfo = 'visible'
     },
     onRemove () {
       this.Pokemon.id = ''
       this.Pokemon.name = ''
       this.Pokemon.cp = ''
-      this.isVisibleinfo = 'hidden'
+      this.isVisibleInfo = 'hidden'
     }
   },
   data () {
     return {
       Pokemon: { id: '', name: '', cp: '' },
       isVisible: 'hidden',
-      isVisibleinfo: 'hidden'
+      isVisibleInfo: 'hidden'
     }
   }
 }

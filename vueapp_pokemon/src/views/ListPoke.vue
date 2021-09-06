@@ -7,29 +7,33 @@
   </section>
   <section>
   <div class="filter" >
-    <button v-on:click="typ = !typ">Type</button>
-    <button v-on:click="gener = !gener">Generation</button>
-    <button v-on:click="legen = !legen">Legendary</button>
-    <button v-on:click="rarly = !rarly">Rarly in pkgo</button>
-    <div class="listtype" v-show="typ">
-      <button @click="swap (tap, index)" v-bind:class="`type POKEMON_TYPE_${tap.toUpperCase()}`" v-for="(tap, index) in Typi" :key="tap">{{ tap }}</button>
+    <button v-on:click="ToggleType = !ToggleType">Type</button>
+    <button v-on:click="ToggleGenerations = !ToggleGenerations">Generation</button>
+    <button v-on:click="ToggleLegendary = !ToggleLegendary">Legendary</button>
+    <button v-on:click="ToggleRarly = !ToggleRarly">Rarly in pkgo</button>
+
+    <div class="listtype" v-show="ToggleType">
+      <button @click="ToggleTypeFilter (type, index)" v-bind:class="`type POKEMON_TYPE_${type.toUpperCase()}`" v-for="(type, index) in AllType" :key="'A' + type">{{ type }}</button>
     </div>
-    <div class="gener" v-show="gener">
-      <button v-for="(gener) in geners" :key="gener">{{ gener }}</button>
+
+    <div class="Generation" v-show="ToggleGenerations">
+      <button v-for="Generation in Generations" :key="'C' + Generation">{{ Generation }}</button>
     </div>
-    <div class="listtyp" v-show="legen">mewtwo mew lugia</div>
-    <div class="listtyp" v-show="rarly">mr. mime mr. rime sirfetch'd</div>
+
+    <div class="listtyp" v-show="ToggleLegendary">mewtwo mew lugia</div>
+
+    <div class="listtyp" v-show="ToggleRarly">mr. mime mr. rime sirfetch'd</div>
   </div>
   </section>
   <section>
   <div class="resolve">
-    <router-link :to="{ name: 'Poknik', params: { Poknik: item.id }}" class="PokemonCart" v-for="item in listPokemon" :key="item.id">
-      <div class="id">{{ item.id }}</div>
-      <div class="imya">{{ item.name }}</div>
-      <img :src="require(`../../src/views/media/Pokemon/pokemon_icon_${('1000' + item.id).slice(-3)}_00.png`)" alt="">
-      <div v-bind:class="`type primaryType POKEMON_TYPE_${item.primaryType.toUpperCase()}`">{{ item.primaryType }}</div>
-      <div v-if="item.secondaryType" v-bind:class="`type secondaryType POKEMON_TYPE_${item.secondaryType.toUpperCase()}`">{{ item.secondaryType }}</div>
-      <div class="MaxCP">MaxCP: {{  item.maxCP }}</div>
+    <router-link :to="{ name: 'Poknik', params: { Poknik: Pokemon.id }}" class="PokemonCart" v-for="Pokemon in listPokemon" :key="'B' + Pokemon.id">
+      <div class="id">{{ Pokemon.id }}</div>
+      <div class="PokemonName">{{ Pokemon.name }}</div>
+      <img :src="require(`../../src/views/media/Pokemon/pokemon_icon_${('1000' + Pokemon.id).slice(-3)}_00.png`)" alt="">
+      <div v-bind:class="`type primaryType POKEMON_TYPE_${Pokemon.primaryType.toUpperCase()}`">{{ Pokemon.primaryType }}</div>
+      <div v-if="Pokemon.secondaryType" v-bind:class="`type secondaryType POKEMON_TYPE_${Pokemon.secondaryType.toUpperCase()}`">{{ Pokemon.secondaryType }}</div>
+      <div class="MaxCP">MaxCP: {{  Pokemon.maxCP }}</div>
     </router-link>
   </div>
   </section>
@@ -43,16 +47,15 @@ export default {
   name: 'ListPoke',
   data () {
     return {
-      borderis: '1px solid gray',
       listPokemon: [],
       InputName: '',
-      typ: false,
-      gener: false,
-      legen: false,
-      rarly: false,
-      type_sort: '',
+      ToggleType: false,
+      ToggleGenerations: false,
+      ToggleLegendary: false,
+      ToggleRarly: false,
+      TypeFilter: '',
       offset: 0,
-      geners: [
+      Generations: [
         'Канто (1)',
         'Джото (2)',
         'Хоэнн (3)',
@@ -62,7 +65,7 @@ export default {
         'Алола (7)',
         'Галар (8)'
       ],
-      Typi: [
+      AllType: [
         'Normal',
         'Fire',
         'Water',
@@ -86,7 +89,7 @@ export default {
   },
   apollo: {
     FetchListPoke: {
-      query: gql`query($offset: Int!, $limit: Int!){getPokemons(input: {pagination: {offset: $offset limit: $limit}}) {id, name, primaryType, secondaryType, maxCP}}`,
+      query: gql`query($offset: Int!, $limit: Int!){getPokemons(input: { sort: [id] pagination: {offset: $offset limit: $limit}}) {id, name, primaryType, secondaryType, maxCP}}`,
       variables () {
         return {
           offset: this.offset,
@@ -100,30 +103,29 @@ export default {
     }
   },
   methods: {
-    swap (type, index) {
-      if (this.type_sort === type) {
-        this.type_sort = ''
+    ToggleTypeFilter (type, index) {
+      if (this.TypeFilter === type) {
+        this.TypeFilter = ''
         document.querySelector('.listtype').children[index].classList.remove('active')
       } else {
-        if (this.type_sort !== '') {
+        if (this.TypeFilter !== '') {
           document.querySelector('.active').classList.remove('active')
         }
-        this.type_sort = type
+        this.TypeFilter = type
         document.querySelector('.listtype').children[index].classList.add('active')
       }
     },
-    Kebov () {
-      if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 50) {
-        this.offset += 15
+    AddMoreCut () {
+      if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
+        setTimeout(() => { this.offset += 15 }, 100)
       }
     }
   },
-
   created () {
-    window.addEventListener('scroll', this.Kebov)
+    window.addEventListener('scroll', this.AddMoreCut)
   },
   unmounted () {
-    window.removeEventListener('scroll', this.Kebov)
+    window.removeEventListener('scroll', this.AddMoreCut)
   }
 }
 </script>
@@ -261,7 +263,7 @@ export default {
   .id::before{
        content: '#';
   }
-  .imya{
+  .PokemonName{
     grid-column-start: 2;
     grid-column-end: 5;
     grid-row: 1;
