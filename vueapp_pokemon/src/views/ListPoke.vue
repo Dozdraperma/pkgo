@@ -13,11 +13,11 @@
     <button v-on:click="ToggleRarly = !ToggleRarly">Rarly in pkgo</button>
 
     <div class="listtype" v-show="ToggleType">
-      <button @click="ToggleTypeFilter (type, index)" v-bind:class="`type POKEMON_TYPE_${type.toUpperCase()}`" v-for="(type, index) in AllType" :key="'A' + type">{{ type }}</button>
+      <button @click="ToggleTypeFilter (type, index)" v-bind:class="`type POKEMON_TYPE_${type.toUpperCase()}`" v-for="(type, index) in AllType" :key="type">{{ type }}</button>
     </div>
 
     <div class="Generation" v-show="ToggleGenerations">
-      <button v-for="Generation in Generations" :key="'C' + Generation">{{ Generation }}</button>
+      <button v-for="Generation in Generations" :key="Generation">{{ Generation }}</button>
     </div>
 
     <div class="listtyp" v-show="ToggleLegendary">mewtwo mew lugia</div>
@@ -27,7 +27,7 @@
   </section>
   <section>
   <div class="resolve">
-    <router-link :to="{ name: 'Poknik', params: { Poknik: Pokemon.id }}" class="PokemonCart" v-for="Pokemon in listPokemon" :key="'B' + Pokemon.id">
+    <router-link :to="{ name: 'Poknik', params: { Poknik: Pokemon.id }}" class="PokemonCart" v-for="(Pokemon, i) in listPokemon" :key="Pokemon.id + i">
       <div class="id">{{ Pokemon.id }}</div>
       <div class="PokemonName">{{ Pokemon.name }}</div>
       <img :src="require(`../../src/views/media/Pokemon/pokemon_icon_${('1000' + Pokemon.id).slice(-3)}_00.png`)" alt="">
